@@ -182,11 +182,11 @@ function makeUserProgramFixture() {
 };
 
 function makeAllFixtures() {
-    const testUsers = makeUserFixture(),
-    const testDisasters = makeDisasterFixture(),
-    const testDisasterPrograms = makeDisasterProgramFixture(),
-    const testDisasterPlanSteps = makeDisasterPlanStepFixture(),
-    const testUserPrograms = makeUserProgramFixture()
+    const testUsers = makeUserFixture();
+    const testDisasters = makeDisasterFixture();
+    const testDisasterPrograms = makeDisasterProgramFixture();
+    const testDisasterPlanSteps = makeDisasterPlanStepFixture();
+    const testUserPrograms = makeUserProgramFixture();
 
     return {testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms}
 };
