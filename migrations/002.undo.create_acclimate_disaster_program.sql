@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS acclimate_disaster_program;

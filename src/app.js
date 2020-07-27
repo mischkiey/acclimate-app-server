@@ -15,11 +15,7 @@ app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
 
-app.get('/', (req, res) => {
-    res.send('Hello, world!')
-});
-
-app.use(function errorHandler(error, req, res, next) { /* eslint-disable-line no-unused-var */
+app.use(function errorHandler(error, req, res, next) { 
     let response;
     if (NODE_ENV === 'production') {
         response = { error: { message: 'Internal server error' } };
