@@ -1,14 +1,12 @@
-const express = require('express');
 const knex = require('knex');
-
-const app = require('..src/app');
-const { DATABASE_URL } = require('../src/config');
+const app = require('../src/app');
 const helpers = require('./test-helpers');
+const { makeAllFixtures } = require('./test-helpers');
 
-// Create a function to clean all tables
-
-describe(`Disasters Endpoints`, () => {
+describe('Disasters Endpoints', () => {
     let db;
+
+    const { testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms } = makeAllFixtures();
 
     before('Make a connection', () => {
         db = knex({
@@ -18,10 +16,17 @@ describe(`Disasters Endpoints`, () => {
         app.set('db', db);
     });
 
-    before('Clean tables before all tests', () => db('acclimate_disasters').truncate());
-    afterEach('Clean tables after each test', () => db('acclimate_disasters').truncate());
+    before('Clean tables before all tests', () => helpers.truncateAllTables(db));
+    afterEach('Clean tables after each test', () => helpers.truncateAllTables(db));
     after('Destroy the connection', () => db.destroy());
 
-    
-
+    describe('GET Endpoints', () => {
+        context('Given no data in database', () => {
+            it('GET /disaster responds with 200 and an empty array', () => {
+                return supertest(app)
+                    .get('/disaster')
+                    .expect(200, [])
+            });
+        });
+    });
 });

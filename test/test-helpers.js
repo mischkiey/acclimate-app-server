@@ -97,73 +97,73 @@ function makeDisasterPlanStepFixture() {
             disaster_plan_step_id: 1,
             disaster_plan_step: 'Blizzard readiness step',
             disaster_plan_step_stage: 'Readiness',
-            disastre_program_id: 1
+            disaster_program_id: 1
         },
         {
-            disaster_plan_step_id: 1,
+            disaster_plan_step_id: 2,
             disaster_plan_step: 'Blizzard response step',
             disaster_plan_step_stage: 'Response',
-            disastre_program_id: 1
+            disaster_program_id: 1
         },
         {
-            disaster_plan_step_id: 1,
+            disaster_plan_step_id: 3,
             disaster_plan_step: 'Blizzard recovery step',
             disaster_plan_step_stage: 'Recovery',
-            disastre_program_id: 1
+            disaster_program_id: 1
         },
         {
-            disaster_plan_step_id: 2,
+            disaster_plan_step_id: 4,
             disaster_plan_step: 'Wildfire readiness step',
             disaster_plan_step_stage: 'Readiness',
-            disastre_program_id: 2
+            disaster_program_id: 2
         },
         {
-            disaster_plan_step_id: 2,
+            disaster_plan_step_id: 5,
             disaster_plan_step: 'Wildfire response step',
             disaster_plan_step_stage: 'Response',
-            disastre_program_id: 2
+            disaster_program_id: 2
         },
         {
-            disaster_plan_step_id: 2,
+            disaster_plan_step_id: 6,
             disaster_plan_step: 'Wildfire recoveru step',
             disaster_plan_step_stage: 'Recovery',
-            disastre_program_id: 2
+            disaster_program_id: 2
         },
         {
-            disaster_plan_step_id: 3,
+            disaster_plan_step_id: 7,
             disaster_plan_step: 'Nuclear explosion readiness step',
             disaster_plan_step_stage: 'Readiness',
-            disastre_program_id: 3
+            disaster_program_id: 3
         },
         {
-            disaster_plan_step_id: 3,
+            disaster_plan_step_id: 8,
             disaster_plan_step: 'Nuclear explosion response step',
             disaster_plan_step_stage: 'Response',
-            disastre_program_id: 3
+            disaster_program_id: 3
         },
         {
-            disaster_plan_step_id: 3,
+            disaster_plan_step_id: 9,
             disaster_plan_step: 'Nuclear explosion recovery step',
             disaster_plan_step_stage: 'Recovery',
-            disastre_program_id: 3
+            disaster_program_id: 3
         },
         {
-            disaster_plan_step_id: 4,
+            disaster_plan_step_id: 10,
             disaster_plan_step: 'Lost-at-Sea readiness step',
             disaster_plan_step_stage: 'Readiness',
-            disastre_program_id: 4
+            disaster_program_id: 4
         },
         {
-            disaster_plan_step_id: 4,
+            disaster_plan_step_id: 11,
             disaster_plan_step: 'Lost-at-Sea response step',
             disaster_plan_step_stage: 'Response',
-            disastre_program_id: 4
+            disaster_program_id: 4
         },
         {
-            disaster_plan_step_id: 4,
+            disaster_plan_step_id: 12,
             disaster_plan_step: 'Lost-at-Sea recovery step',
             disaster_plan_step_stage: 'Recovery',
-            disastre_program_id: 4
+            disaster_program_id: 4
         },
     ];
 };
@@ -181,6 +181,8 @@ function makeUserProgramFixture() {
     ]
 };
 
+// Question: Return an object without assigning it to a variable?
+
 function makeAllFixtures() {
     const testUsers = makeUserFixture();
     const testDisasters = makeDisasterFixture();
@@ -188,10 +190,11 @@ function makeAllFixtures() {
     const testDisasterPlanSteps = makeDisasterPlanStepFixture();
     const testUserPrograms = makeUserProgramFixture();
 
-    return {testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms}
+    return {testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms};
 };
 
-// Question: What happens if I don't return it?
+// Question: What happens if I don't return the promise object?
+
 function seedAllTables(db, users, disasters, programs, planSteps, userPrograms) {
     return db.transaction(async (trx) => {
         await trx('acclimate_user').insert(users);
@@ -202,7 +205,7 @@ function seedAllTables(db, users, disasters, programs, planSteps, userPrograms) 
     });
 };
 
-function truncAllTables(db) {
+function truncateAllTables(db) {
     return db.raw(
         `TRUNCATE acclimate_user, acclimate_disaster, acclimate_disaster_program, acclimate_disaster_plan_step, acclimate_user_program RESTART IDENTITY CASCADE;`
     );
@@ -219,5 +222,5 @@ module.exports = {
     makeAllFixtures,
 
     seedAllTables,
-    truncAllTables,
+    truncateAllTables,
 }
