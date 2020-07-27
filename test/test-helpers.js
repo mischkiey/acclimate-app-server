@@ -91,16 +91,133 @@ function makeDisasterProgramFixture() {
     ];
 };
 
-function makeUserProgramFixture() {
-
+function makeDisasterPlanStepFixture() {
+    return [
+        {
+            disaster_plan_step_id: 1,
+            disaster_plan_step: 'Blizzard readiness step',
+            disaster_plan_step_stage: 'Readiness',
+            disastre_program_id: 1
+        },
+        {
+            disaster_plan_step_id: 1,
+            disaster_plan_step: 'Blizzard response step',
+            disaster_plan_step_stage: 'Response',
+            disastre_program_id: 1
+        },
+        {
+            disaster_plan_step_id: 1,
+            disaster_plan_step: 'Blizzard recovery step',
+            disaster_plan_step_stage: 'Recovery',
+            disastre_program_id: 1
+        },
+        {
+            disaster_plan_step_id: 2,
+            disaster_plan_step: 'Wildfire readiness step',
+            disaster_plan_step_stage: 'Readiness',
+            disastre_program_id: 2
+        },
+        {
+            disaster_plan_step_id: 2,
+            disaster_plan_step: 'Wildfire response step',
+            disaster_plan_step_stage: 'Response',
+            disastre_program_id: 2
+        },
+        {
+            disaster_plan_step_id: 2,
+            disaster_plan_step: 'Wildfire recoveru step',
+            disaster_plan_step_stage: 'Recovery',
+            disastre_program_id: 2
+        },
+        {
+            disaster_plan_step_id: 3,
+            disaster_plan_step: 'Nuclear explosion readiness step',
+            disaster_plan_step_stage: 'Readiness',
+            disastre_program_id: 3
+        },
+        {
+            disaster_plan_step_id: 3,
+            disaster_plan_step: 'Nuclear explosion response step',
+            disaster_plan_step_stage: 'Response',
+            disastre_program_id: 3
+        },
+        {
+            disaster_plan_step_id: 3,
+            disaster_plan_step: 'Nuclear explosion recovery step',
+            disaster_plan_step_stage: 'Recovery',
+            disastre_program_id: 3
+        },
+        {
+            disaster_plan_step_id: 4,
+            disaster_plan_step: 'Lost-at-Sea readiness step',
+            disaster_plan_step_stage: 'Readiness',
+            disastre_program_id: 4
+        },
+        {
+            disaster_plan_step_id: 4,
+            disaster_plan_step: 'Lost-at-Sea response step',
+            disaster_plan_step_stage: 'Response',
+            disastre_program_id: 4
+        },
+        {
+            disaster_plan_step_id: 4,
+            disaster_plan_step: 'Lost-at-Sea recovery step',
+            disaster_plan_step_stage: 'Recovery',
+            disastre_program_id: 4
+        },
+    ];
 };
 
+function makeUserProgramFixture() {
+    return [
+        {
+            user_id: 1,
+            disaster_program_id: 1
+        },
+        {
+            user_id: 2,
+            disaster_program_id: 2
+        },
+    ]
+};
+
+function makeAllFixtures() {
+    const testUsers = makeUserFixture(),
+    const testDisasters = makeDisasterFixture(),
+    const testDisasterPrograms = makeDisasterProgramFixture(),
+    const testDisasterPlanSteps = makeDisasterPlanStepFixture(),
+    const testUserPrograms = makeUserProgramFixture()
+
+    return {testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms}
+};
+
+// Question: What happens if I don't return it?
+function seedAllTables(db, users, disasters, programs, planSteps, userPrograms) {
+    return db.transaction(async (trx) => {
+        await trx('acclimate_user').insert(users);
+        await trx('acclimate_disaster').insert(disasters);
+        await trx('acclimate_disaster_program').insert(programs);
+        await trx('acclimate_disaster_plan_step').insert(planSteps);
+        await trx('acclimate_user_program').insert(userPrograms);
+    });
+};
+
+function truncAllTables(db) {
+    return db.raw(
+        `TRUNCATE acclimate_user, acclimate_disaster, acclimate_disaster_program, acclimate_disaster_plan_step, acclimate_user_program RESTART IDENTITY CASCADE;`
+    );
+};
+
+// Todo: Function to create auth token
 
 module.exports = {
     makeUserFixture,
     makeDisasterFixture,
     makeDisasterProgramFixture,
+    makeDisasterPlanStepFixture,
     makeUserProgramFixture,
+    makeAllFixtures,
 
-
+    seedAllTables,
+    truncAllTables,
 }
