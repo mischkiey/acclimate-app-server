@@ -58,7 +58,7 @@ function makeDisasterFixture() {
         },
         {
             disaster_id: 4,
-            disaster_name: 'Lost at Sea',
+            disaster_name: 'Lost-at-Sea',
             disaster_type: 'Bonus',
             disaster_description: 'Wrestling with savage seas? Stranded without fuel or water? Return to shore in one piece with these seven sure-fire survival tips. (Taken from cnn.com)',
             disaster_image: 'https://cdn.cnn.com/cnnnext/dam/assets/130327105557-survival-guide-boat-horizontal-large-gallery.jpg'
@@ -70,11 +70,23 @@ function makeDisasterProgramFixture() {
     return [
         {
             disaster_program_id: 1,
-            disaster_program_information: '',
-            disaster_program_readiness: '',
-            disaster_program_response: '',
-            disaster_program_recovery: '',
+            disaster_program_information: 'About the blizzard disaster program',
             disaster_id: 1
+        },
+        {
+            disaster_program_id: 2,
+            disaster_program_information: 'About the wildfire disaster program',
+            disaster_id: 2
+        },
+        {
+            disaster_program_id: 3,
+            disaster_program_information: 'About the nuclear explosion disaster program',
+            disaster_id: 3
+        },
+        {
+            disaster_program_id: 4,
+            disaster_program_information: 'About the lost-at-sea situation program',
+            disaster_id: 4
         },
     ];
 };
