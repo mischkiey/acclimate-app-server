@@ -1,8 +1,11 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 function makeUserFixture() {
     return [
         {
             user_id: 1,
-            user_name: 'Mingh',
+            user_name: 'Minh',
             user_password: 'myamazingpassword'
         },
         {
@@ -193,11 +196,20 @@ function makeAllFixtures() {
     return {testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms};
 };
 
-// Question: What happens if I don't return the promise object?
+function seedUsersTable(db, users) {
+    const preppedUsers = users.map(user => ({
+        ...user,
+        user_password: bcrypt.hashSync(user.user_password, 1)
+    }))
+
+    return db('acclimate_user').insert(preppedUsers);
+
+    // Update id sequence?
+};
 
 function seedAllTables(db, users, disasters, programs, planSteps, userPrograms) {
     return db.transaction(async (trx) => {
-        await trx('acclimate_user').insert(users);
+        await seedUsersTable(trx, users); 
         await trx('acclimate_disaster').insert(disasters);
         await trx('acclimate_disaster_program').insert(programs);
         await trx('acclimate_disaster_plan_step').insert(planSteps);
@@ -213,6 +225,19 @@ function truncateAllTables(db) {
 
 // Todo: Function to create auth token
 
+function makeJWTAuthHeader(user) {
+    const token = jwt.sign(
+        { user_id: user.user_id },
+        process.env.JWT_SECRET,
+        {
+            subject: user.user_name,
+            algorithm: 'HS256',
+        }
+    );
+
+    return `Bearer ${token}`;
+};
+
 module.exports = {
     makeUserFixture,
     makeDisasterFixture,
@@ -221,6 +246,9 @@ module.exports = {
     makeUserProgramFixture,
     makeAllFixtures,
 
+    seedUsersTable,
     seedAllTables,
     truncateAllTables,
+
+    makeJWTAuthHeader,
 }

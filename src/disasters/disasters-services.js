@@ -11,13 +11,6 @@ const DisastersServices = {
             .first()
     },
 
-    // getDisasterPlanStepsByDisasterProgramID(db, disaster_id) {
-    //     return db('acclimate_disaster_program')
-    //         .join('acclimate_disaster_plan_step', 'acclimate_disaster_program.disaster_program_id', '=', 'acclimate_disaster_plan_step.disaster_program_id')
-    //         .select('disaster_id')
-    //         .where({disaster_id})
-    // },
-
     getDisasterProgramByID(db, disaster_id) {
         return db('acclimate_disaster_program')
             .select('*')

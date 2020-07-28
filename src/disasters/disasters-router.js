@@ -37,20 +37,17 @@ DisastersRoute
         const disaster_id = req.params.disasterID;
         return DisastersServices.getDisasterProgramByID(req.app.get('db'), disaster_id)
             .then(program => {
-                console.log(program)
                 if(!program)
                     return res.status(400).json({error: 'Invalid ID'})
 
                 return DisastersServices.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id)
                     .then(steps => {
-                        console.log(steps)
-
                         const disasterProgram = {
                             disaster_id: program.disaster_id,
+                            disaster_program_id: program.disaster_program_id,
                             disaster_program_information: program.disaster_program_information,
                             disaster_plan_steps: steps,
                         };
-
                         return res.json(disasterProgram)
                     })
                     .catch(next)

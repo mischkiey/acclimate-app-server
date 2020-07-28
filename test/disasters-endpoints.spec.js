@@ -74,7 +74,8 @@ describe(`Disasters Endpoints`, () => {
                 const disasterID = 1;
                 const disasterPlan = testDisasterPlanSteps.filter(step => step.disaster_program_id === disasterID);
                 const disasterProgram = {
-                    disaster_id: testDisasters[0].disaster_id,
+                    disaster_id: testDisasterPrograms[0].disaster_id,
+                    disaster_program_id: testDisasterPrograms[0].disaster_program_id,
                     disaster_program_information: testDisasterPrograms[0].disaster_program_information,
                     disaster_plan_steps: disasterPlan,
                 }

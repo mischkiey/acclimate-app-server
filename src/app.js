@@ -5,7 +5,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const { NODE_ENV } = require('./config');
+
+const AuthRoute = require('./auth/auth-router');
 const DisastersRoute = require('./disasters/disasters-router');
+
 
 const app = express();
 
@@ -17,6 +20,7 @@ app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
 
+app.use('/api/auth', AuthRoute);
 app.use('/api/disaster', DisastersRoute);
 
 // Change error format?
