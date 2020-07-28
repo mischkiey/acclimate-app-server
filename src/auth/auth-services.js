@@ -19,6 +19,12 @@ const AuthServices = {
             }
         );
     },
+
+    verifyJWT(token) {
+        return jwt.verify(token, JWT_SECRET, {
+            algorithm: 'HS256'
+        });
+    },
 };
 
 module.exports = AuthServices;

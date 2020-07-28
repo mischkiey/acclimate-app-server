@@ -1,10 +1,9 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
-const AuthRoute = express.Router();
 
 const AuthServices = require('./auth-services');
+
+const AuthRoute = express.Router();
 
 AuthRoute
     .route('/login')
@@ -33,6 +32,6 @@ AuthRoute
                     .catch(next)
             })
             .catch(next)
-    })
+    });
 
 module.exports = AuthRoute;

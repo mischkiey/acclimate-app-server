@@ -225,10 +225,10 @@ function truncateAllTables(db) {
 
 // Todo: Function to create auth token
 
-function makeJWTAuthHeader(user) {
+function makeJWTAuthHeader(user, secret = process.env.JWT_SECRET) {
     const token = jwt.sign(
         { user_id: user.user_id },
-        process.env.JWT_SECRET,
+        secret,
         {
             subject: user.user_name,
             algorithm: 'HS256',

@@ -6,6 +6,7 @@ describe(`Disasters Endpoints`, () => {
     let db;
 
     const { testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms } = helpers.makeAllFixtures();
+    const testUser = testUsers[0];
 
     before(`Make a connection`, () => {
         db = knex({
@@ -21,9 +22,12 @@ describe(`Disasters Endpoints`, () => {
 
     describe(`GET Endpoints`, () => {
         context(`Given no data in database`, () => {
+            beforeEach(`Seed user table before each test in this context`, () => helpers.seedUsersTable(db, testUsers))
+
             it(`GET /api/disaster responds with 200 and an empty array`, () => {
                 return supertest(app)
                     .get('/api/disaster')
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(200, [])
             });
 
@@ -31,6 +35,7 @@ describe(`Disasters Endpoints`, () => {
                 const disasterID = 12345;
                 return supertest(app)
                     .get(`/api/disaster/${disasterID}`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(400, {error: 'Invalid ID'})
             });
         });
@@ -46,6 +51,7 @@ describe(`Disasters Endpoints`, () => {
             it(`GET /api/disaster responds with 200 and disasters array`, () => {
                 return supertest(app)
                     .get('/api/disaster')
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(200, testDisasters)
             });
 
@@ -53,6 +59,7 @@ describe(`Disasters Endpoints`, () => {
                 const disasterID = 12345;
                 return supertest(app)
                     .get(`/api/disaster/${disasterID}`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(400, {error: 'Invalid ID'})
             });
 
@@ -60,6 +67,7 @@ describe(`Disasters Endpoints`, () => {
                 const disasterID = 1;
                 return supertest(app)
                     .get(`/api/disaster/${disasterID}`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(200, testDisasters[0])
             });
 
@@ -67,6 +75,7 @@ describe(`Disasters Endpoints`, () => {
                 const disasterID = 12345;
                 return supertest(app)
                     .get(`/api/disaster/program/${disasterID}`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(400, {error: 'Invalid ID'})
             })
 
@@ -81,6 +90,7 @@ describe(`Disasters Endpoints`, () => {
                 }
                 return supertest(app)
                     .get(`/api/disaster/program/${disasterID}`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(200, disasterProgram)
             });
             

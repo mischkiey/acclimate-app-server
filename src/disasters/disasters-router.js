@@ -1,15 +1,15 @@
 const express = require('express');
 
 const DisastersRoute = express.Router();
-const jsonParser = express.json();
 
 const DisastersServices = require('./disasters-services');
+const { requireAuth } = require('../middleware/jwt-auth');
 
 // Todo: XSS/
 
 DisastersRoute
     .route('/')
-    .get((req, res, next) => {
+    .get(requireAuth, (req, res, next) => {
         return DisastersServices.getDisasters(req.app.get('db'))
             .then(disasters => {
                 return res.json(disasters);
@@ -19,7 +19,7 @@ DisastersRoute
 
 DisastersRoute
     .route('/:disasterID')
-    .get((req, res, next) => {
+    .get(requireAuth, (req, res, next) => {
         const disaster_id = req.params.disasterID;
         return DisastersServices.getDisasterByID(req.app.get('db'), disaster_id)
             .then(disaster => {
@@ -33,7 +33,7 @@ DisastersRoute
 
 DisastersRoute
     .route('/program/:disasterID')
-    .get((req, res, next) => {
+    .get(requireAuth, (req, res, next) => {
         const disaster_id = req.params.disasterID;
         return DisastersServices.getDisasterProgramByID(req.app.get('db'), disaster_id)
             .then(program => {

@@ -20,10 +20,8 @@ describe(`Auth Endpoint`, () => {
     afterEach(`Clean tables after each test`, () => helpers.truncateAllTables(db));
     after(`Destroy the connection`, () => db.destroy());
 
-    // Invalid JWT
-
-    describe.only(`POST /login endpoint`, () => {
-        beforeEach(`Seed users table before each test`, () => helpers.seedUsersTable(db, testUsers));
+    describe(`POST /login endpoint`, () => {
+        beforeEach(`Seed user table before each test`, () => helpers.seedUsersTable(db, testUsers));
 
         const requiredLoginFields = ['user_name', 'user_password']
 
