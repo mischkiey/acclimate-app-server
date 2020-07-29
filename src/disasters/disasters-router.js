@@ -81,6 +81,7 @@ DisastersRoute
 
                 }))
                 
+                console.log(userProgramListDetails, 'Boo!')
                 return res.json(userProgramListDetails)
             })
             .catch(next)
