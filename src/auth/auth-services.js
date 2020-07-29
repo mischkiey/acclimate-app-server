@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config');
 
-const AuthServices = {
+const AuthService = {
     getUser(db, user_name) {
         return db('acclimate_user')
             .select('*')
@@ -27,4 +27,4 @@ const AuthServices = {
     },
 };
 
-module.exports = AuthServices;
+module.exports = AuthService;

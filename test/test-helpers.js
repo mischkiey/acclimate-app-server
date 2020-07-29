@@ -6,32 +6,38 @@ function makeUserFixture() {
         {
             user_id: 1,
             user_name: 'Minh',
-            user_password: 'myamazingpassword'
+            user_password: 'myamazingpassword',
+            user_full_name: 'Minh N',
         },
         {
             user_id: 2,
             user_name: 'Nick',
-            user_password: 'mylastnameissomarvel'
+            user_password: 'mylastnameissomarvel',
+            user_full_name: 'Nick T',
         },
         {
             user_id: 3,
             user_name: 'Wesley',
-            user_password: 'itsrounotroux'
+            user_password: 'itsrounotroux',
+            user_full_name: 'Wesley R',
         },
         {
             user_id: 4,
             user_name: 'MattR',
-            user_password: 'noidontliveinaspaceship'
+            user_password: 'noidontliveinaspaceship',
+            user_full_name: 'Matt R',
         },
         {
             user_id: 5,
             user_name: 'Muhajir',
-            user_password: '3rdpartyapi'
+            user_password: '3rdpartyapi',
+            user_full_name: 'Muhajir S',
         },
         {
             user_id: 6,
             user_name: 'Ronnie',
-            user_password: 'igobyjj'
+            user_password: 'igobyjj',
+            user_full_name: 'Ronnie H',
         }
     ];
 };
@@ -204,15 +210,16 @@ function makeAllFixtures() {
     return {testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms};
 };
 
-function seedUsersTable(db, users) {
+async function seedUsersTable(db, users) {
     const preppedUsers = users.map(user => ({
         ...user,
         user_password: bcrypt.hashSync(user.user_password, 1)
     }))
 
-    return db('acclimate_user').insert(preppedUsers);
+    await db('acclimate_user').insert(preppedUsers);
 
-    // Update id sequence?
+    await db.raw(`SELECT setval('acclimate_user_user_id_seq', ?)`, users[users.length-1].user_id)
+
 };
 
 function seedAllTables(db, users, disasters, programs, planSteps, userPrograms) {

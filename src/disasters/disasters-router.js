@@ -2,7 +2,7 @@ const express = require('express');
 
 const DisastersRoute = express.Router();
 
-const DisastersServices = require('./disasters-services');
+const DisastersService = require('./disasters-services');
 const { requireAuth } = require('../middleware/jwt-auth');
 
 // Todo: XSS/
@@ -10,7 +10,7 @@ const { requireAuth } = require('../middleware/jwt-auth');
 DisastersRoute
     .route('/')
     .get(requireAuth, (req, res, next) => {
-        return DisastersServices.getDisasters(req.app.get('db'))
+        return DisastersService.getDisasters(req.app.get('db'))
             .then(disasters => {
                 return res.json(disasters);
             })
@@ -21,7 +21,7 @@ DisastersRoute
     .route('/:disasterID')
     .get(requireAuth, (req, res, next) => {
         const disaster_id = req.params.disasterID;
-        return DisastersServices.getDisasterByID(req.app.get('db'), disaster_id)
+        return DisastersService.getDisasterByID(req.app.get('db'), disaster_id)
             .then(disaster => {
                 if(!disaster)
                     return res.status(400).json({error: 'Invalid ID'})
@@ -35,12 +35,12 @@ DisastersRoute
     .route('/program/:disasterID')
     .get(requireAuth, (req, res, next) => {
         const disaster_id = req.params.disasterID;
-        return DisastersServices.getDisasterProgramByID(req.app.get('db'), disaster_id)
+        return DisastersService.getDisasterProgramByID(req.app.get('db'), disaster_id)
             .then(program => {
                 if(!program)
                     return res.status(400).json({error: 'Invalid ID'})
 
-                return DisastersServices.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id)
+                return DisastersService.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id)
                     .then(steps => {
                         // if(!steps.length)
                         //     return res.status(400).json({error: 'No program details found'})
@@ -61,16 +61,16 @@ DisastersRoute
 DisastersRoute
     .route('/user/program')
     .get(requireAuth, (req, res, next) => {
-        return DisastersServices.getUserPrograms(req.app.get('db'), req.user.user_id)
+        return DisastersService.getUserPrograms(req.app.get('db'), req.user.user_id)
             .then(async userProgramList => {
                 if(!userProgramList.length)
                     return res.status(400).json({error: 'No user programs found'})
                 
                 const userProgramListDetails = await Promise.all(userProgramList.map(async userProgram => {
                     
-                    const program = await DisastersServices.getDisasterProgramByID(req.app.get('db'), userProgram.disaster_program_id)
+                    const program = await DisastersService.getDisasterProgramByID(req.app.get('db'), userProgram.disaster_program_id)
 
-                    const steps = await DisastersServices.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id)        
+                    const steps = await DisastersService.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id)        
                     
                     return {
                         disaster_id: program.disaster_id,
@@ -81,7 +81,6 @@ DisastersRoute
 
                 }))
                 
-                console.log(userProgramListDetails, 'BOO');
                 return res.json(userProgramListDetails)
             })
             .catch(next)

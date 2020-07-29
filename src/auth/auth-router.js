@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 
-const AuthServices = require('./auth-services');
+const AuthService = require('./auth-services');
 
 const AuthRoute = express.Router();
 
@@ -14,7 +14,7 @@ AuthRoute
             if (value == null) // Or !value
                 return res.status(400).json({error: `Missing ${key} in body`})
 
-        return AuthServices.getUser(req.app.get('db'), user_name)
+        return AuthService.getUser(req.app.get('db'), user_name)
             .then(user => {
                 if (!user)
                     return res.status(401).json({error: 'Invalid username or password'})
@@ -24,7 +24,7 @@ AuthRoute
                         if(!match)
                             return res.status(401).json({error: 'Invalid username or password'})
                         
-                        const token = AuthServices.createJWT(user);
+                        const token = AuthService.createJWT(user);
 
                         res.status(200).json({authToken: token});
                     })

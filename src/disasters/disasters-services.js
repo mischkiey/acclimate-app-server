@@ -1,4 +1,4 @@
-const DisastersServices = {
+const DisastersService = {
     getDisasters(db) {
         return db('acclimate_disaster')
             .select('*')
@@ -35,4 +35,4 @@ const DisastersServices = {
 // ;
 
 
-module.exports = DisastersServices;
+module.exports = DisastersService;

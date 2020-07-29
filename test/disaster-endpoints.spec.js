@@ -1,7 +1,6 @@
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
-const supertest = require('supertest');
 
 describe(`Disasters Endpoints`, () => {
     let db;
@@ -103,7 +102,6 @@ describe(`Disasters Endpoints`, () => {
             })
             
             it(`GET /api/disaster/user/program responds with 200 and all user-selected programs`, () => {
-
                 return supertest(app)
                     .get(`/api/disaster/user/program`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))

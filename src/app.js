@@ -8,6 +8,7 @@ const { NODE_ENV } = require('./config');
 
 const AuthRoute = require('./auth/auth-router');
 const DisastersRoute = require('./disasters/disasters-router');
+const UserRoute = require('./user/user-router');
 
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(cors());
 
 app.use('/api/auth', AuthRoute);
 app.use('/api/disaster', DisastersRoute);
+app.use('/api/user', UserRoute);
 
 // Change error format?
 app.use(function errorHandler(error, req, res, next) { 
