@@ -23,6 +23,16 @@ const DisastersServices = {
             .select('*')
             .where({disaster_program_id})
     },
+
+    getUserPrograms(db, user_id) {
+        return db('acclimate_user_program')
+            .select('*')
+            .where({user_id})
+    },
 };
+
+// SELECT acclimate_disaster_program.disaster_id, acclimate_disaster_program.disaster_program_information, acclimate_disaster_plan_step.disaster_plan_step, acclimate_disaster_plan_step.disaster_plan_step_stage FROM  acclimate_disaster_program JOIN acclimate_disaster_plan_step ON acclimate_disaster_program.disaster_program_id = acclimate_disaster_plan_step.disaster_program_id WHERE acclimate_disaster_plan_step.disaster_program_id = 1
+// ;
+
 
 module.exports = DisastersServices;

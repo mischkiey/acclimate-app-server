@@ -10,7 +10,6 @@ AuthRoute
     .post(express.json(), (req, res, next) => {
         const { user_name, user_password } = req.body;
         const loginInputs = { user_name, user_password };
-
         for ( const [ key, value ] of Object.entries(loginInputs) )
             if (value == null) // Or !value
                 return res.status(400).json({error: `Missing ${key} in body`})

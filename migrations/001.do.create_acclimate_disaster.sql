@@ -10,5 +10,4 @@ CREATE TABLE IF NOT EXISTS acclimate_disaster (
     disaster_description VARCHAR NOT NUll,
     disaster_image VARCHAR NOT NULL,
     disaster_type disaster_type NOT NULL
-
 );

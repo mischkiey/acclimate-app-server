@@ -178,6 +178,14 @@ function makeUserProgramFixture() {
             disaster_program_id: 1
         },
         {
+            user_id: 1,
+            disaster_program_id: 2
+        },
+        {
+            user_id: 1,
+            disaster_program_id: 3
+        },
+        {
             user_id: 2,
             disaster_program_id: 2
         },

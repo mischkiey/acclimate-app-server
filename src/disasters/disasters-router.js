@@ -42,6 +42,9 @@ DisastersRoute
 
                 return DisastersServices.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id)
                     .then(steps => {
+                        // if(!steps.length)
+                        //     return res.status(400).json({error: 'No program details found'})
+
                         const disasterProgram = {
                             disaster_id: program.disaster_id,
                             disaster_program_id: program.disaster_program_id,
@@ -51,6 +54,35 @@ DisastersRoute
                         return res.json(disasterProgram)
                     })
                     .catch(next)
+            })
+            .catch(next)
+    })
+
+DisastersRoute
+    .route('/user/program')
+    .get(requireAuth, (req, res, next) => {
+        return DisastersServices.getUserPrograms(req.app.get('db'), req.user.user_id)
+            .then(async userProgramList => {
+                if(!userProgramList.length)
+                    return res.status(400).json({error: 'No user programs found'})
+                
+                const userProgramListDetails = await Promise.all(userProgramList.map(async userProgram => {
+                    
+                    const program = await DisastersServices.getDisasterProgramByID(req.app.get('db'), userProgram.disaster_program_id)
+
+                    const steps = await DisastersServices.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id)        
+                    
+                    return {
+                        disaster_id: program.disaster_id,
+                        disaster_program_id: program.disaster_program_id,
+                        disaster_program_information: program.disaster_program_information,
+                        disaster_plan_steps: steps,
+                    };
+
+                }))
+                
+                console.log(userProgramListDetails, 'BOO');
+                return res.json(userProgramListDetails)
             })
             .catch(next)
     })

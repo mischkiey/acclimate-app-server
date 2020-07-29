@@ -1,6 +1,7 @@
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
+const supertest = require('supertest');
 
 describe(`Disasters Endpoints`, () => {
     let db;
@@ -81,18 +82,38 @@ describe(`Disasters Endpoints`, () => {
 
             it(`GET /disaster/program/:disasterID responds with 200 and disaster program with steps`, () => {
                 const disasterID = 1;
-                const disasterPlan = testDisasterPlanSteps.filter(step => step.disaster_program_id === disasterID);
-                const disasterProgram = {
+                const expectedDisasterPlan = testDisasterPlanSteps.filter(step => step.disaster_program_id === disasterID);
+                const expectedDisasterProgram = {
                     disaster_id: testDisasterPrograms[0].disaster_id,
                     disaster_program_id: testDisasterPrograms[0].disaster_program_id,
                     disaster_program_information: testDisasterPrograms[0].disaster_program_information,
-                    disaster_plan_steps: disasterPlan,
+                    disaster_plan_steps: expectedDisasterPlan,
                 }
                 return supertest(app)
                     .get(`/api/disaster/program/${disasterID}`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))
-                    .expect(200, disasterProgram)
+                    .expect(200, expectedDisasterProgram)
             });
+
+            it(`GET /api/disaster/user/program responds with 400 and 'No user programs found' error`, () => {
+                return supertest(app)
+                    .get(`/api/disaster/user/program`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUsers[5]))
+                    .expect(400, {error: 'No user programs found'})
+            })
+            
+            it(`GET /api/disaster/user/program responds with 200 and all user-selected programs`, () => {
+
+                return supertest(app)
+                    .get(`/api/disaster/user/program`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .expect(200)
+            });
+
+            // it(`GET /disaster/user/:disasterProgramID responds with 200 and user-selected program`, () => {
+            //     const disasterProgramID = 1 //disaster_program_id
+                 
+            // });
             
         });
 
