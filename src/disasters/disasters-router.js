@@ -59,12 +59,12 @@ DisastersRoute
     .route('/user/program')
     .get(requireAuth, async(req, res, next) => {
         try {
-            const userProgramList = await DisasterService.getUserProgramsByUserID(req.app.get('db'), req.user.user_id);
+            const userProgramsList = await DisasterService.getUserProgramsByUserID(req.app.get('db'), req.user.user_id);
 
-            if(!userProgramList.length)
-                return res.status(400).json({error: 'No user programs found'});
+            if(!userProgramsList.length)
+                return res.status(200).json([]);
 
-            const userProgramListDetails = await Promise.all(userProgramList.map(async userProgram => { 
+            const userProgramsListDetails = await Promise.all(userProgramsList.map(async userProgram => { 
                 const program = await DisasterService.getDisasterProgramByID(req.app.get('db'), userProgram.disaster_program_id);
 
                 const steps = await DisasterService.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id);        
@@ -76,7 +76,7 @@ DisastersRoute
                     disaster_plan_steps: steps,
                 };
             }));
-            return res.json(userProgramListDetails);
+            return res.json(userProgramsListDetails);
         } catch(error) {
             next(error);
         };
@@ -92,7 +92,7 @@ DisastersRoute
             if(!program)
                 return res.status(400).json({error: 'No program found'});
 
-            const duplicateProgram = await DisasterService.findUserProgram(req.app.get('db'), req.user.user_id, disaster_program_id)
+            const duplicateProgram = await DisasterService.getUserProgram(req.app.get('db'), req.user.user_id, disaster_program_id)
             
             if(duplicateProgram.length)
                 return res.status(400).json({error: 'Program already added'});
@@ -106,6 +106,23 @@ DisastersRoute
 
             if(newUserProgram)
                 return res.status(201).json(newUserProgram);
+        } catch(error) {
+            next(error);
+        };
+    });
+
+DisastersRoute
+    .route('/user/:disasterProgramID')
+    .delete(requireAuth, async(req, res, next) => {
+        try {
+            const disaster_program_id = req.params.disasterProgramID;
+
+            const row = await DisasterService.deleteUserProgram(req.app.get('db'), req.user.user_id, disaster_program_id)
+
+            if(row)
+                return res.json({});
+        
+            return res.json({error: 'Program not found and thus not deleted'})
         } catch(error) {
             next(error);
         };

@@ -1,8 +1,10 @@
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
+const supertest = require('supertest');
+const { expect } = require('chai');
 
-describe(`Disasters Endpoints`, () => {
+describe(`Disasters CRUD Endpoints`, () => {
     let db;
 
     const { testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms } = helpers.makeAllFixtures();
@@ -91,11 +93,18 @@ describe(`Disasters Endpoints`, () => {
                     .expect(200, expectedDisasterProgram)
             });
 
-            it(`GET /api/disaster/user/program responds with 400 and 'No user programs found' error when user has not selected programs prior`, () => {
+            it.skip(`GET /api/disaster/user/program responds with 400 and 'No user programs found' error when user has not selected programs prior`, () => {
                 return supertest(app)
                     .get(`/api/disaster/user/program`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUsers[5]))
                     .expect(400, {error: 'No user programs found'})
+            });
+
+            it(`GET /api/disaster/user/program responds with 200 and empty array when user has not selected programs prior`, () => {
+                return supertest(app)
+                    .get(`/api/disaster/user/program`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUsers[5]))
+                    .expect(200, [])
             });
             
             it(`GET /api/disaster/user/program responds with 200 and all user programs`, () => {
@@ -103,10 +112,7 @@ describe(`Disasters Endpoints`, () => {
                     .get(`/api/disaster/user/program`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(200)
-            });
-
-            // GET /disaster/user/:disasterProgramID
-            
+            });            
         });
     });
 
@@ -148,10 +154,36 @@ describe(`Disasters Endpoints`, () => {
                             .expect(200)
                             .expect(res => {
                                 const newUserProgram = res.body.filter(userProgram => userProgram.disaster_program_id === disaster_program_id);
-
                                 expect(newUserProgram).to.exist;
                             });
                     });
+            });
+        });
+    });
+
+    describe(`DELETE Endpoints`, () => {
+        context(`Remove program from user programs`, () => {
+            beforeEach(`Seed all tables before each test in context`, () => {
+                return helpers.seedAllTables(db, testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms)
+            });
+            
+            it(`Delete /api/disaster/user/:disasterProgramID responds with 200`, () => {
+                const disasterProgramID = 1;
+                return supertest(app)
+                    .delete(`/api/disaster/user/${disasterProgramID}`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .expect(200)
+                    .then(() => {
+                        return supertest(app)
+                            .get(`/api/disaster/user/program`)
+                            .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                            .expect(200)
+                            .expect(res => {
+                                const deletedUserProgram = res.body.filter(userProgram => userProgram.user_id === testUser.user_id).filter(userProgram => userProgram.disaster_program_id === disasterProgramID)
+                                
+                                expect(deletedUserProgram).to.be.empty;
+                            })
+                    })
             });
         });
     });

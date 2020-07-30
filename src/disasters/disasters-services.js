@@ -36,7 +36,7 @@ const DisasterService = {
             .where({disaster_program_id})
     },
 
-    findUserProgram(db, user_id, disaster_program_id) {
+    getUserProgram(db, user_id, disaster_program_id) {
         return db('acclimate_user_program')
             .select('*')
             .where({user_id, disaster_program_id})
@@ -47,6 +47,12 @@ const DisasterService = {
             .insert(newUserProgram)
             .returning('*')
             .then(([res]) => res)
+    },
+
+    deleteUserProgram(db, user_id, disaster_program_id) {
+        return db('acclimate_user_program')
+            .where({user_id, disaster_program_id})
+            .del()
     },
 };
 
