@@ -38,7 +38,7 @@ function makeUserFixture() {
             user_name: 'Ronnie',
             user_password: 'igobyjj',
             user_full_name: 'Ronnie H',
-        }
+        },
     ];
 };
 

@@ -23,7 +23,7 @@ VALUES
     ('Blizzard recovery step', 'Recovery', 1),
     ('Wildfire readiness step', 'Readiness', 2),
     ('Wildfire response step', 'Response', 2),
-    ('Wildfire recoveru step', 'Recovery', 2),
+    ('Wildfire recovery step', 'Recovery', 2),
     ('Nuclear explosion readiness step', 'Readiness', 3),
     ('Nuclear explosion response step', 'Response', 3),
     ('Nuclear explosion recovery step', 'Recovery', 3),
@@ -44,9 +44,6 @@ VALUES
 INSERT INTO acclimate_user_program (user_id, disaster_program_id)
 VALUES
     (1, 1),
-    (1, 2),
-    (1, 3),
-    (1, 4),
     (2, 2);
 
 COMMIT;

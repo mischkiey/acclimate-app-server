@@ -24,10 +24,23 @@ const DisastersService = {
             .where({disaster_program_id})
     },
 
-    getUserPrograms(db, user_id) {
+    getUserProgramsByUserID(db, user_id) {
         return db('acclimate_user_program')
             .select('*')
             .where({user_id})
+    },
+
+    getUserProgramsByProgramID(db, disaster_program_id) {
+        return db('acclimate_user_program')
+            .select('*')
+            .where({disaster_program_id})
+    },
+
+    insertUserProgram(db, newUserProgram) {
+        return db('acclimate_user_program')
+            .insert(newUserProgram)
+            .returning('*')
+            .then(([res]) => res)
     },
 };
 

@@ -61,7 +61,7 @@ DisastersRoute
 DisastersRoute
     .route('/user/program')
     .get(requireAuth, (req, res, next) => {
-        return DisastersService.getUserPrograms(req.app.get('db'), req.user.user_id)
+        return DisastersService.getUserProgramsByUserID(req.app.get('db'), req.user.user_id)
             .then(async userProgramList => {
                 if(!userProgramList.length)
                     return res.status(400).json({error: 'No user programs found'})
@@ -81,10 +81,42 @@ DisastersRoute
 
                 }))
                 
-                console.log(userProgramListDetails, 'Boo!')
                 return res.json(userProgramListDetails)
             })
             .catch(next)
     })
+    .post(requireAuth, express.json(), (req, res, next) => {
+        const disaster_program_id = Number(req.body.disaster_program_id);
+
+        if(disaster_program_id === 0)
+            return res.status(400).json({error: 'No program selected'})
+
+        return DisastersService.getDisasterProgramByID(req.app.get('db'), disaster_program_id)
+            .then(program => {
+                if(!program)
+                    return res.status(400).json({error: 'No program found'})
+
+                return DisastersService.getUserProgramsByProgramID(req.app.get('db'), disaster_program_id)
+                    .then(program => {
+                        console.log(program, 'Meow')
+                        if(program.length)
+                            return res.status(400).json({error: 'Program already added'})
+
+                        const insertUserProgram = {
+                            user_id: req.user.user_id,
+                            disaster_program_id
+                        };
+                        
+                        return DisastersService.insertUserProgram(req.app.get('db'), insertUserProgram)
+                            .then(newUserProgram => {
+                                return res.status(201).json(newUserProgram)
+                            })
+                            .catch(next)
+                    })
+                    .catch(next)
+            })
+            .catch(next)
+    });
 
 module.exports = DisastersRoute;
+

@@ -123,7 +123,7 @@ describe(`Users Endpoint`, () => {
                     .expect(400, {error: 'Username not available'})
             });
 
-            it(`POST /api/user responds with 201 and appropriate location/path`, () => {
+            it(`POST /api/user responds with 201 and new user object`, () => {
                 const validSignUpInputs = {
                     user_name: 'Miki',
                     user_password: '!!!AAaa00',

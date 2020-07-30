@@ -1,6 +1,8 @@
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
+const supertest = require('supertest');
+const { expect } = require('chai');
 
 describe(`Disasters Endpoints`, () => {
     let db;
@@ -41,9 +43,6 @@ describe(`Disasters Endpoints`, () => {
         });
 
         context(`Given data in database`, () => {
-            // Return promise object from async function to 'block' the rest of the code
-            // Without returning promise object, JS ran the code following the async
-            // The test captured this behavior when it reported the actual result to be an empty array
             beforeEach(`Seed all tables before each test in context`, () => {
                 return helpers.seedAllTables(db, testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms)
             })
@@ -101,19 +100,67 @@ describe(`Disasters Endpoints`, () => {
                     .expect(400, {error: 'No user programs found'})
             })
             
-            it(`GET /api/disaster/user/program responds with 200 and all user-selected programs`, () => {
+            // Expected user data?
+            it(`GET /api/disaster/user/program responds with 200 and all user programs`, () => {
                 return supertest(app)
                     .get(`/api/disaster/user/program`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(200)
             });
 
-            // it(`GET /disaster/user/:disasterProgramID responds with 200 and user-selected program`, () => {
-            //     const disasterProgramID = 1 //disaster_program_id
-                 
-            // });
+            // GET /disaster/user/:disasterProgramID
             
         });
 
+    });
+
+    describe(`POST Endpoints`, () => {
+        context(`Add program to user programs`, () => {
+            beforeEach(`Seed all tables before each test in context`, () => {
+                return helpers.seedAllTables(db, testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms)
+            });
+
+            it(`POST /api/disaster/user/program responds with 400 and 'No program selected' error when no program selected`, () => {
+                const disaster_program_id = '0';
+
+                return supertest(app)
+                    .post('/api/disaster/user/program')
+                    .send({disaster_program_id})
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .expect(400, {error: 'No program selected'})
+            });
+
+            it(`POST /api/disaster/user/program responds with 400 and 'No program found' error when no program found`, () => {
+                const disaster_program_id = '12345';
+
+                return supertest(app)
+                    .post('/api/disaster/user/program')
+                    .send({disaster_program_id})
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .expect(400, {error: 'No program found'})
+            });
+
+            it(`POST /api/disaster/user/program responds with 201`, () => {
+                const disaster_program_id = 4;
+
+                return supertest(app)
+                    .post('/api/disaster/user/program')
+                    .send({disaster_program_id})
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .expect(201)
+                    .then(() => {
+                        return supertest(app)
+                            .get(`/api/disaster/user/program`)
+                            .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                            .expect(200)
+                            .expect(res => {
+                                console.log(res.body)
+                                const newUserProgram = res.body.filter(userProgram => userProgram.disaster_program_id === disaster_program_id);
+
+                                expect(newUserProgram).to.exist;
+                            });
+                    });
+            });
+        });
     });
 });
