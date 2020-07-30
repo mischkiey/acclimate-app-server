@@ -198,14 +198,66 @@ function makeUserProgramFixture() {
     ]
 };
 
+function makeUserTaskItemFixture() {
+    return [
+        {
+            user_task_item_id: 1,
+            user_task_item: `Minh's Task Item 1`,
+            user_id: 1,
+        },
+        {
+            user_task_item_id: 2,
+            user_task_item: `Minh's Task Item 2`,
+            user_id: 1,
+        },
+        {
+            user_task_item_id: 3,
+            user_task_item: `Nick's Task Item 1`,
+            user_id: 2,
+        },
+        {
+            user_task_item_id: 4,
+            user_task_item: `Wesley's Task Item 1`,
+            user_id: 3,
+        },
+    ]
+};
+
+function makeUserShoppingItemFixture() {
+    return [
+        {
+            user_shopping_item_id: 1,
+            user_shopping_item: `Minh's Shopping Item 1`,
+            user_id: 1,
+        },
+        {
+            user_shopping_item_id: 2,
+            user_shopping_item: `Minh's Shopping Item 2`,
+            user_id: 1,
+        },
+        {
+            user_shopping_item_id: 3,
+            user_shopping_item: `Nick's Shopping Item 1`,
+            user_id: 2,
+        },
+        {
+            user_shopping_item_id: 4,
+            user_shopping_item: `Wesley's Shopping Item 1`,
+            user_id: 3,
+        },
+    ]
+};
+
 function makeAllFixtures() {
     const testUsers = makeUserFixture();
     const testDisasters = makeDisasterFixture();
     const testDisasterPrograms = makeDisasterProgramFixture();
     const testDisasterPlanSteps = makeDisasterPlanStepFixture();
     const testUserPrograms = makeUserProgramFixture();
+    const testUserTaskItems = makeUserTaskItemFixture();
+    const testUserShoppingItems = makeUserShoppingItemFixture()
 
-    return {testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms};
+    return {testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms, testUserTaskItems, testUserShoppingItems};
 };
 
 async function seedUsersTable(db, users) {
@@ -255,6 +307,8 @@ module.exports = {
     makeDisasterProgramFixture,
     makeDisasterPlanStepFixture,
     makeUserProgramFixture,
+    makeUserTaskItemFixture,
+    makeUserShoppingItemFixture,
     makeAllFixtures,
 
     seedUsersTable,

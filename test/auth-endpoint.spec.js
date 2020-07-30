@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 describe(`Auth Endpoint`, () => {
     let db;
 
-    const { testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms } = helpers.makeAllFixtures();
+    const { testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms, testUserTaskItems, testUserShoppingItems } = helpers.makeAllFixtures();
 
     before(`Make a connection`, () => {
         db = knex({

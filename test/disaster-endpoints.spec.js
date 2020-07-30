@@ -7,7 +7,7 @@ const { expect } = require('chai');
 describe(`Disasters CRUD Endpoints`, () => {
     let db;
 
-    const { testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms } = helpers.makeAllFixtures();
+    const { testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms, testUserTaskItems, testUserShoppingItems } = helpers.makeAllFixtures();
     const testUser = testUsers[0];
 
     before(`Make a connection`, () => {
