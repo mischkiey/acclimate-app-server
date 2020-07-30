@@ -1,9 +1,9 @@
 const express = require('express');
 
-const DisastersRoute = express.Router();
-
 const DisasterService = require('./disasters-services');
 const { requireAuth } = require('../middleware/jwt-auth');
+
+const DisastersRoute = express.Router();
 
 // Todo: XSS
 
@@ -35,9 +35,7 @@ DisastersRoute
     .route('/program/:disasterID')
     .get(requireAuth, async(req, res, next) => {
         const disaster_id = req.params.disasterID;
-
         try {
-
             const program = await DisasterService.getDisasterProgramByID(req.app.get('db'), disaster_id);
 
             if(!program)
@@ -51,28 +49,22 @@ DisastersRoute
                 disaster_program_information: program.disaster_program_information,
                 disaster_plan_steps: steps,
             };
-
             return res.json(disasterProgram)
-
         } catch(error) {
             next(error)
         };
-
     });
 
 DisastersRoute
     .route('/user/program')
     .get(requireAuth, async(req, res, next) => {
-
         try {
-
             const userProgramList = await DisasterService.getUserProgramsByUserID(req.app.get('db'), req.user.user_id);
 
             if(!userProgramList.length)
                 return res.status(400).json({error: 'No user programs found'});
 
-            const userProgramListDetails = await Promise.all(userProgramList.map(async userProgram => {
-                
+            const userProgramListDetails = await Promise.all(userProgramList.map(async userProgram => { 
                 const program = await DisasterService.getDisasterProgramByID(req.app.get('db'), userProgram.disaster_program_id);
 
                 const steps = await DisasterService.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id);        
@@ -83,22 +75,15 @@ DisastersRoute
                     disaster_program_information: program.disaster_program_information,
                     disaster_plan_steps: steps,
                 };
-
             }));
-        
-            console.log(userProgramListDetails, 'Meow-meow-meow');
             return res.json(userProgramListDetails);
-
         } catch(error) {
             next(error);
         };
-
     })
     .post(requireAuth, express.json(), async(req, res, next) => {
         const disaster_program_id = Number(req.body.disaster_program_id);
-
         try {
-
             if(disaster_program_id === 0)
                 return res.status(400).json({error: 'No program selected'});
 
@@ -107,7 +92,7 @@ DisastersRoute
             if(!program)
                 return res.status(400).json({error: 'No program found'});
 
-            const duplicateProgram = await DisasterService.getUserProgramsByProgramID(req.app.get('db'), disaster_program_id)
+            const duplicateProgram = await DisasterService.findUserProgram(req.app.get('db'), req.user.user_id, disaster_program_id)
             
             if(duplicateProgram.length)
                 return res.status(400).json({error: 'Program already added'});
@@ -121,7 +106,6 @@ DisastersRoute
 
             if(newUserProgram)
                 return res.status(201).json(newUserProgram);
-
         } catch(error) {
             next(error);
         };

@@ -52,7 +52,7 @@ describe(`Disasters Endpoints`, () => {
                     .expect(200, testDisasters)
             });
 
-            it(`GET /api/disaster/:disasterID responds with 400 and 'Invalid ID' error`, () => {
+            it(`GET /api/disaster/:disasterID responds with 400 and 'Invalid ID' error when invalid ID`, () => {
                 const disasterID = 12345;
                 return supertest(app)
                     .get(`/api/disaster/${disasterID}`)
@@ -68,7 +68,7 @@ describe(`Disasters Endpoints`, () => {
                     .expect(200, testDisasters[0])
             });
 
-            it(`GET /api/disaster/program/:disasterID responds with 400 and 'Invalid ID' error`, () => {
+            it(`GET /api/disaster/program/:disasterID responds with 400 and 'Invalid ID' error when invalid ID`, () => {
                 const disasterID = 12345;
                 return supertest(app)
                     .get(`/api/disaster/program/${disasterID}`)
@@ -84,19 +84,19 @@ describe(`Disasters Endpoints`, () => {
                     disaster_program_id: testDisasterPrograms[0].disaster_program_id,
                     disaster_program_information: testDisasterPrograms[0].disaster_program_information,
                     disaster_plan_steps: expectedDisasterPlanSteps,
-                }
+                };
                 return supertest(app)
                     .get(`/api/disaster/program/${disasterID}`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(200, expectedDisasterProgram)
             });
 
-            it(`GET /api/disaster/user/program responds with 400 and 'No user programs found' error`, () => {
+            it(`GET /api/disaster/user/program responds with 400 and 'No user programs found' error when user has not selected programs prior`, () => {
                 return supertest(app)
                     .get(`/api/disaster/user/program`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUsers[5]))
                     .expect(400, {error: 'No user programs found'})
-            })
+            });
             
             it(`GET /api/disaster/user/program responds with 200 and all user programs`, () => {
                 return supertest(app)
@@ -108,7 +108,6 @@ describe(`Disasters Endpoints`, () => {
             // GET /disaster/user/:disasterProgramID
             
         });
-
     });
 
     describe(`POST Endpoints`, () => {
@@ -119,7 +118,6 @@ describe(`Disasters Endpoints`, () => {
 
             it(`POST /api/disaster/user/program responds with 400 and 'No program selected' error when no program selected`, () => {
                 const disaster_program_id = '0';
-
                 return supertest(app)
                     .post('/api/disaster/user/program')
                     .send({disaster_program_id})
@@ -129,7 +127,6 @@ describe(`Disasters Endpoints`, () => {
 
             it(`POST /api/disaster/user/program responds with 400 and 'No program found' error when no program found`, () => {
                 const disaster_program_id = '12345';
-
                 return supertest(app)
                     .post('/api/disaster/user/program')
                     .send({disaster_program_id})
@@ -139,7 +136,6 @@ describe(`Disasters Endpoints`, () => {
 
             it(`POST /api/disaster/user/program responds with 201`, () => {
                 const disaster_program_id = 4;
-
                 return supertest(app)
                     .post('/api/disaster/user/program')
                     .send({disaster_program_id})

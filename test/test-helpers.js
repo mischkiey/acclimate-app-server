@@ -56,21 +56,21 @@ function makeDisasterFixture() {
             disaster_name: 'Wildfire',
             disaster_type: 'Natural',
             disaster_description: 'A wildfire can spread quickly across forests and fields, giving you little time to evacuate to safety. Drought, dry conditions, and the careless use of fire all contribute to increased risk of wildfire. Get the facts about wildfires and learn what to do to keep your loved ones safe! (Taken from redcross.org)',
-            disaster_image: 'https://images.unsplash.com/photo-1572204097183-e1ab140342ed?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80'
+            disaster_image: 'https://images.unsplash.com/photo-1551207004-3e38b4f52ba6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1300&q=80'
         },
         {
             disaster_id: 3,
             disaster_name: 'Nuclear Explosion',
             disaster_type: 'Man-made or Hybrid',
             disaster_description: 'Three factors for protecting yourself from radiation and fallout are distance, shielding and time. (Taken from redcross.org)',
-            disaster_image: 'https://images.unsplash.com/photo-1573487482166-09cd477f7b3b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1762&q=80'
+            disaster_image: 'https://images.unsplash.com/photo-1576673195903-bb573ef5a755?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80'
         },
         {
             disaster_id: 4,
             disaster_name: 'Lost-at-Sea',
             disaster_type: 'Bonus',
             disaster_description: 'Wrestling with savage seas? Stranded without fuel or water? Return to shore in one piece with these seven sure-fire survival tips. (Taken from cnn.com)',
-            disaster_image: 'https://cdn.cnn.com/cnnnext/dam/assets/130327105557-survival-guide-boat-horizontal-large-gallery.jpg'
+            disaster_image: 'https://images.unsplash.com/photo-1542824202-31b6eae33e02?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1287&q=80'
         },
     ]
 };
