@@ -1,8 +1,6 @@
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
-const supertest = require('supertest');
-const { expect } = require('chai');
 
 describe(`Disasters Endpoints`, () => {
     let db;
@@ -24,7 +22,7 @@ describe(`Disasters Endpoints`, () => {
 
     describe(`GET Endpoints`, () => {
         context(`Given no data in database`, () => {
-            beforeEach(`Seed user table before each test in this context`, () => helpers.seedUsersTable(db, testUsers))
+            beforeEach(`Seed user table before each test in this context`, () => helpers.seedUsersTable(db, testUsers));
 
             it(`GET /api/disaster responds with 200 and an empty array`, () => {
                 return supertest(app)
@@ -43,9 +41,9 @@ describe(`Disasters Endpoints`, () => {
         });
 
         context(`Given data in database`, () => {
-            beforeEach(`Seed all tables before each test in context`, () => {
+            beforeEach(`Seed all tables before each test in this context`, () => {
                 return helpers.seedAllTables(db, testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms)
-            })
+            });
 
             it(`GET /api/disaster responds with 200 and disasters array`, () => {
                 return supertest(app)
@@ -80,12 +78,12 @@ describe(`Disasters Endpoints`, () => {
 
             it(`GET /disaster/program/:disasterID responds with 200 and disaster program with steps`, () => {
                 const disasterID = 1;
-                const expectedDisasterPlan = testDisasterPlanSteps.filter(step => step.disaster_program_id === disasterID);
+                const expectedDisasterPlanSteps = testDisasterPlanSteps.filter(step => step.disaster_program_id === disasterID);
                 const expectedDisasterProgram = {
                     disaster_id: testDisasterPrograms[0].disaster_id,
                     disaster_program_id: testDisasterPrograms[0].disaster_program_id,
                     disaster_program_information: testDisasterPrograms[0].disaster_program_information,
-                    disaster_plan_steps: expectedDisasterPlan,
+                    disaster_plan_steps: expectedDisasterPlanSteps,
                 }
                 return supertest(app)
                     .get(`/api/disaster/program/${disasterID}`)
@@ -100,7 +98,6 @@ describe(`Disasters Endpoints`, () => {
                     .expect(400, {error: 'No user programs found'})
             })
             
-            // Expected user data?
             it(`GET /api/disaster/user/program responds with 200 and all user programs`, () => {
                 return supertest(app)
                     .get(`/api/disaster/user/program`)
@@ -154,7 +151,6 @@ describe(`Disasters Endpoints`, () => {
                             .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                             .expect(200)
                             .expect(res => {
-                                console.log(res.body)
                                 const newUserProgram = res.body.filter(userProgram => userProgram.disaster_program_id === disaster_program_id);
 
                                 expect(newUserProgram).to.exist;

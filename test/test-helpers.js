@@ -198,8 +198,6 @@ function makeUserProgramFixture() {
     ]
 };
 
-// Question: Return an object without assigning it to a variable?
-
 function makeAllFixtures() {
     const testUsers = makeUserFixture();
     const testDisasters = makeDisasterFixture();
@@ -214,12 +212,10 @@ async function seedUsersTable(db, users) {
     const preppedUsers = users.map(user => ({
         ...user,
         user_password: bcrypt.hashSync(user.user_password, 1)
-    }))
+    }));
 
     await db('acclimate_user').insert(preppedUsers);
-
     await db.raw(`SELECT setval('acclimate_user_user_id_seq', ?)`, users[users.length-1].user_id)
-
 };
 
 function seedAllTables(db, users, disasters, programs, planSteps, userPrograms) {
@@ -266,4 +262,4 @@ module.exports = {
     truncateAllTables,
 
     makeJWTAuthHeader,
-}
+};

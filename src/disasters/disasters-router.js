@@ -2,15 +2,15 @@ const express = require('express');
 
 const DisastersRoute = express.Router();
 
-const DisastersService = require('./disasters-services');
+const DisasterService = require('./disasters-services');
 const { requireAuth } = require('../middleware/jwt-auth');
 
-// Todo: XSS/
+// Todo: XSS
 
 DisastersRoute
     .route('/')
     .get(requireAuth, (req, res, next) => {
-        return DisastersService.getDisasters(req.app.get('db'))
+        return DisasterService.getDisasters(req.app.get('db'))
             .then(disasters => {
                 return res.json(disasters);
             })
@@ -21,7 +21,7 @@ DisastersRoute
     .route('/:disasterID')
     .get(requireAuth, (req, res, next) => {
         const disaster_id = req.params.disasterID;
-        return DisastersService.getDisasterByID(req.app.get('db'), disaster_id)
+        return DisasterService.getDisasterByID(req.app.get('db'), disaster_id)
             .then(disaster => {
                 if(!disaster)
                     return res.status(400).json({error: 'Invalid ID'})
@@ -33,89 +33,98 @@ DisastersRoute
 
 DisastersRoute
     .route('/program/:disasterID')
-    .get(requireAuth, (req, res, next) => {
+    .get(requireAuth, async(req, res, next) => {
         const disaster_id = req.params.disasterID;
-        return DisastersService.getDisasterProgramByID(req.app.get('db'), disaster_id)
-            .then(program => {
-                if(!program)
-                    return res.status(400).json({error: 'Invalid ID'})
 
-                return DisastersService.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id)
-                    .then(steps => {
-                        // if(!steps.length)
-                        //     return res.status(400).json({error: 'No program details found'})
+        try {
 
-                        const disasterProgram = {
-                            disaster_id: program.disaster_id,
-                            disaster_program_id: program.disaster_program_id,
-                            disaster_program_information: program.disaster_program_information,
-                            disaster_plan_steps: steps,
-                        };
-                        return res.json(disasterProgram)
-                    })
-                    .catch(next)
-            })
-            .catch(next)
-    })
+            const program = await DisasterService.getDisasterProgramByID(req.app.get('db'), disaster_id);
+
+            if(!program)
+                return res.status(400).json({error: 'Invalid ID'})
+        
+            const steps = await DisasterService.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id)
+
+            const disasterProgram = {
+                disaster_id: program.disaster_id,
+                disaster_program_id: program.disaster_program_id,
+                disaster_program_information: program.disaster_program_information,
+                disaster_plan_steps: steps,
+            };
+
+            return res.json(disasterProgram)
+
+        } catch(error) {
+            next(error)
+        };
+
+    });
 
 DisastersRoute
     .route('/user/program')
-    .get(requireAuth, (req, res, next) => {
-        return DisastersService.getUserProgramsByUserID(req.app.get('db'), req.user.user_id)
-            .then(async userProgramList => {
-                if(!userProgramList.length)
-                    return res.status(400).json({error: 'No user programs found'})
-                
-                const userProgramListDetails = await Promise.all(userProgramList.map(async userProgram => {
-                    
-                    const program = await DisastersService.getDisasterProgramByID(req.app.get('db'), userProgram.disaster_program_id)
+    .get(requireAuth, async(req, res, next) => {
 
-                    const steps = await DisastersService.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id)        
-                    
-                    return {
-                        disaster_id: program.disaster_id,
-                        disaster_program_id: program.disaster_program_id,
-                        disaster_program_information: program.disaster_program_information,
-                        disaster_plan_steps: steps,
-                    };
+        try {
 
-                }))
+            const userProgramList = await DisasterService.getUserProgramsByUserID(req.app.get('db'), req.user.user_id);
+
+            if(!userProgramList.length)
+                return res.status(400).json({error: 'No user programs found'});
+
+            const userProgramListDetails = await Promise.all(userProgramList.map(async userProgram => {
                 
-                return res.json(userProgramListDetails)
-            })
-            .catch(next)
+                const program = await DisasterService.getDisasterProgramByID(req.app.get('db'), userProgram.disaster_program_id);
+
+                const steps = await DisasterService.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id);        
+                
+                return {
+                    disaster_id: program.disaster_id,
+                    disaster_program_id: program.disaster_program_id,
+                    disaster_program_information: program.disaster_program_information,
+                    disaster_plan_steps: steps,
+                };
+
+            }));
+        
+            console.log(userProgramListDetails, 'Meow-meow-meow');
+            return res.json(userProgramListDetails);
+
+        } catch(error) {
+            next(error);
+        };
+
     })
-    .post(requireAuth, express.json(), (req, res, next) => {
+    .post(requireAuth, express.json(), async(req, res, next) => {
         const disaster_program_id = Number(req.body.disaster_program_id);
 
-        if(disaster_program_id === 0)
-            return res.status(400).json({error: 'No program selected'})
+        try {
 
-        return DisastersService.getDisasterProgramByID(req.app.get('db'), disaster_program_id)
-            .then(program => {
-                if(!program)
-                    return res.status(400).json({error: 'No program found'})
+            if(disaster_program_id === 0)
+                return res.status(400).json({error: 'No program selected'});
 
-                return DisastersService.getUserProgramsByProgramID(req.app.get('db'), disaster_program_id)
-                    .then(program => {
-                        console.log(program, 'Meow')
-                        if(program.length)
-                            return res.status(400).json({error: 'Program already added'})
+            const program = await DisasterService.getDisasterProgramByID(req.app.get('db'), disaster_program_id);
 
-                        const insertUserProgram = {
-                            user_id: req.user.user_id,
-                            disaster_program_id
-                        };
-                        
-                        return DisastersService.insertUserProgram(req.app.get('db'), insertUserProgram)
-                            .then(newUserProgram => {
-                                return res.status(201).json(newUserProgram)
-                            })
-                            .catch(next)
-                    })
-                    .catch(next)
-            })
-            .catch(next)
+            if(!program)
+                return res.status(400).json({error: 'No program found'});
+
+            const duplicateProgram = await DisasterService.getUserProgramsByProgramID(req.app.get('db'), disaster_program_id)
+            
+            if(duplicateProgram.length)
+                return res.status(400).json({error: 'Program already added'});
+
+            const insertUserProgram = {
+                user_id: req.user.user_id,
+                disaster_program_id
+            };
+
+            const newUserProgram = await DisasterService.insertUserProgram(req.app.get('db'), insertUserProgram);
+
+            if(newUserProgram)
+                return res.status(201).json(newUserProgram);
+
+        } catch(error) {
+            next(error);
+        };
     });
 
 module.exports = DisastersRoute;
