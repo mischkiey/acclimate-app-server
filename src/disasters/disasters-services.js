@@ -56,28 +56,55 @@ const DisasterService = {
     },
 
     getUserTasks(db, user_id) {
-        return db('acclimate_user_task_item')
+        return db('acclimate_user_task')
             .select('*')
             .where({user_id})
+            .orderBy('user_task_id')
     },
 
     insertUserTask(db, newUserTask) {
-        return db('acclimate_user_task_item')
+        return db('acclimate_user_task')
             .insert(newUserTask)
             .returning('*')
             .then(([res]) => res)
     },
 
-    updateUserTask(db, user_task_item_id, newUserTask) {
-        return db('acclimate_user_task_item')
-            .where({user_task_item_id})
+    updateUserTask(db, user_task_id, newUserTask) {
+        return db('acclimate_user_task')
+            .where({user_task_id})
             .update(newUserTask, ['*'])
     },
 
-    deleteUserTask(db, user_task_item_id) {
-        return db('acclimate_user_task_item')
+    deleteUserTask(db, user_task_id) {
+        return db('acclimate_user_task')
             .delete()
-            .where({user_task_item_id})
+            .where({user_task_id})
+    },
+
+    getUserShoppingItem(db, user_id) {
+        return db('acclimate_user_shopping_item')
+            .select('*')
+            .where({user_id})
+            .orderBy('user_shopping_item_id')
+    },
+
+    insertUserShoppingItem(db, newUserShoppingItem) {
+        return db('acclimate_user_shopping_item')
+            .insert(newUserShoppingItem)
+            .returning('*')
+            .then(([res]) => res)
+    },
+
+    updateUserShoppingItem(db, user_shopping_item_id, newUserShoppingItem) {
+        return db('acclimate_user_shopping_item')
+            .where({user_shopping_item_id})
+            .update(newUserShoppingItem, ['*'])
+    },
+
+    deleteUserShoppingItem(db, user_shopping_item_id) {
+        return db('acclimate_user_shopping_item')
+            .delete()
+            .where({user_shopping_item_id})
     },
 
 };

@@ -198,26 +198,26 @@ function makeUserProgramFixture() {
     ]
 };
 
-function makeUserTaskItemFixture() {
+function makeUserTaskFixture() {
     return [
         {
-            user_task_item_id: 1,
-            user_task_item: `Minh's Task Item 1`,
+            user_task_id: 1,
+            user_task: `Minh's Task Item 1`,
             user_id: 1,
         },
         {
-            user_task_item_id: 2,
-            user_task_item: `Minh's Task Item 2`,
+            user_task_id: 2,
+            user_task: `Minh's Task Item 2`,
             user_id: 1,
         },
         {
-            user_task_item_id: 3,
-            user_task_item: `Nick's Task Item 1`,
+            user_task_id: 3,
+            user_task: `Nick's Task Item 1`,
             user_id: 2,
         },
         {
-            user_task_item_id: 4,
-            user_task_item: `Wesley's Task Item 1`,
+            user_task_id: 4,
+            user_task: `Wesley's Task Item 1`,
             user_id: 3,
         },
     ]
@@ -254,10 +254,10 @@ function makeAllFixtures() {
     const testDisasterPrograms = makeDisasterProgramFixture();
     const testDisasterPlanSteps = makeDisasterPlanStepFixture();
     const testUserPrograms = makeUserProgramFixture();
-    const testUserTaskItems = makeUserTaskItemFixture();
+    const testUserTasks = makeUserTaskFixture();
     const testUserShoppingItems = makeUserShoppingItemFixture()
 
-    return {testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms, testUserTaskItems, testUserShoppingItems};
+    return {testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms, testUserTasks, testUserShoppingItems};
 };
 
 async function seedUsersTable(db, users) {
@@ -270,20 +270,22 @@ async function seedUsersTable(db, users) {
     await db.raw(`SELECT setval('acclimate_user_user_id_seq', ?)`, users[users.length-1].user_id)
 };
 
-function seedAllTables(db, users, disasters, programs, planSteps, userPrograms, userTaskItems, userShoppingItems) {
+function seedAllTables(db, users, disasters, programs, planSteps, userPrograms, userTasks, userShoppingItems) {
     return db.transaction(async (trx) => {
         await seedUsersTable(trx, users); 
         await trx('acclimate_disaster').insert(disasters);
         await trx('acclimate_disaster_program').insert(programs);
         await trx('acclimate_disaster_plan_step').insert(planSteps);
-        await trx('acclimate_user_task_item').insert(userTaskItems);
+        await trx('acclimate_user_task').insert(userTasks);
+        await db.raw(`SELECT setval('acclimate_user_task_user_task_id_seq', ?)`, userTasks[userTasks.length-1].user_task_id)
         await trx('acclimate_user_shopping_item').insert(userShoppingItems);
+        await db.raw(`SELECT setval('acclimate_user_shopping_item_user_shopping_item_id_seq', ?)`, userShoppingItems[userShoppingItems.length-1].user_shopping_item_id)
     });
 };
 
 function truncateAllTables(db) {
     return db.raw(
-        `TRUNCATE acclimate_user, acclimate_disaster, acclimate_disaster_program, acclimate_disaster_plan_step, acclimate_user_program RESTART IDENTITY CASCADE;`
+        `TRUNCATE acclimate_user, acclimate_disaster, acclimate_disaster_program, acclimate_disaster_plan_step, acclimate_user_program, acclimate_user_task, acclimate_user_shopping_item RESTART IDENTITY CASCADE;`
     );
 };
 
@@ -308,7 +310,7 @@ module.exports = {
     makeDisasterProgramFixture,
     makeDisasterPlanStepFixture,
     makeUserProgramFixture,
-    makeUserTaskItemFixture,
+    makeUserTaskFixture,
     makeUserShoppingItemFixture,
     makeAllFixtures,
 

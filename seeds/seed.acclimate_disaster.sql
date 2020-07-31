@@ -1,6 +1,6 @@
 BEGIN;
 
-TRUNCATE acclimate_disaster, acclimate_disaster_program, acclimate_disaster_plan_step, acclimate_user, acclimate_user_program, acclimate_user_task_item, acclimate_user_shopping_item RESTART IDENTITY CASCADE;
+TRUNCATE acclimate_disaster, acclimate_disaster_program, acclimate_disaster_plan_step, acclimate_user, acclimate_user_program, acclimate_user_task, acclimate_user_shopping_item RESTART IDENTITY CASCADE;
 
 INSERT INTO acclimate_disaster (disaster_name, disaster_type, disaster_description, disaster_image)
 VALUES
@@ -46,18 +46,18 @@ VALUES
     (1, 1),
     (2, 2);
 
-INSERT INTO acclimate_user_task_item (user_task_item_id, user_task_item, user_id)
+INSERT INTO acclimate_user_task (user_task, user_id)
 VALUES
-    (1, 'Minhs Task Item 1', 1),
-    (2, 'Minhs Task Item 2', 1),
-    (3, 'Nicks Task Item 1', 2),
-    (4, 'Wesleys Task Item 1', 3);
+    ('Minhs Task Item 1', 1),
+    ('Minhs Task Item 2', 1),
+    ('Nicks Task Item 1', 2),
+    ('Wesleys Task Item 1', 3);
 
-INSERT INTO acclimate_user_shopping_item (user_shopping_item_id, user_shopping_item, user_id)
+INSERT INTO acclimate_user_shopping_item (user_shopping_item, user_id)
 VALUES
-    (1, 'Minhs Shopping Item 1', 1),
-    (2, 'Minhs Shopping Item 2', 1),
-    (3, 'Nicks Shopping Item 1', 2),
-    (4, 'Wesleys Shopping Item 1', 3);
+    ('Minhs Shopping Item 1', 1),
+    ('Minhs Shopping Item 2', 1),
+    ('Nicks Shopping Item 1', 2),
+    ('Wesleys Shopping Item 1', 3);
 
 COMMIT;

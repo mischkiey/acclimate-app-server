@@ -134,7 +134,6 @@ DisastersRoute
         try {
             const tasks = await DisasterService.getUserTasks(req.app.get('db'), req.user.user_id)
 
-            console.log(tasks)
             if(!tasks)
                 return res.json([]);
 
@@ -144,19 +143,18 @@ DisastersRoute
         };
     })
     .post(requireAuth, express.json(), async(req, res, next) => {
-        const { user_task_item } = req.body;
+        const { user_task } = req.body;
 
-        if (!user_task_item.length)
+        if (!user_task.length)
             return res.status(400).json({error: `Missing 'task details' in body`});
 
         const newUserTask = {
             user_id: req.user.user_id,
-            user_task_item
+            user_task,
         };
 
         try {
             const insertedUserTask = await DisasterService.insertUserTask(req.app.get('db'), newUserTask);
-            console.log(insertedUserTask)
             return res.status(201).json(insertedUserTask);
         } catch(error) {
             next(error);
@@ -166,15 +164,16 @@ DisastersRoute
 DisastersRoute
     .route('/user/task/:userTaskID')
     .patch(requireAuth, express.json(), async(req, res, next) => {
-        const newUserTask = req.body;
-        newUserTask.user_id = req.user.user_id;
+        const newUserTask = {
+            user_task_id: req.body.user_task_id,
+            user_task: req.body.user_task,
+            user_id: req.user_id,
+        };
 
         try {
-            const user = await DisasterService.updateUserTask(req.app.get('db'), req.user.user_id, newUserTask);
-
-            console.log(user);
+            const row = await DisasterService.updateUserTask(req.app.get('db'), req.body.user_task_id, newUserTask);
             
-            if(!user)
+            if(!row)
                 return res.json({error: 'Task not found and thus not updated'});
         
             return res.json({message: 'Task successfully updated'});
@@ -183,13 +182,82 @@ DisastersRoute
         };
     })
     .delete(requireAuth, async(req, res, next) => {
-        const user_task_item_id = req.params.userTaskID;
+        const user_task_id = req.params.userTaskID;
 
         try {
-            const row = await DisasterService.deleteUserTask(req.app.get('db'), user_task_item_id)
+            const row = await DisasterService.deleteUserTask(req.app.get('db'), user_task_id)
             
             if(!row)
                 return res.json({error: 'Task not found and thus not deleted'})
+        
+            return res.json({});
+        } catch(error) {
+            next(error);
+        };
+    });
+
+    DisastersRoute
+    .route('/user/shopping')
+    .get(requireAuth, async(req, res, next) => {
+        try {
+            const items = await DisasterService.getUserShoppingItem(req.app.get('db'), req.user.user_id)
+
+            if(!items)
+                return res.json([]);
+
+            return res.json(items);
+        } catch(error) {
+            next(error);
+        };
+    })
+    .post(requireAuth, express.json(), async(req, res, next) => {
+        const { user_shopping_item } = req.body;
+
+        if (!user_shopping_item.length)
+            return res.status(400).json({error: `Missing 'shopping details' in body`});
+
+        const newUserShoppingItem = {
+            user_id: req.user.user_id,
+            user_shopping_item
+        };
+
+        try {
+            const insertedUserShoppingItem = await DisasterService.insertUserShoppingItem(req.app.get('db'), newUserShoppingItem);
+
+            return res.status(201).json(insertedUserShoppingItem);
+        } catch(error) {
+            next(error);
+        };
+    });
+
+DisastersRoute
+    .route('/user/shopping/:userShoppingItemID')
+    .patch(requireAuth, express.json(), async(req, res, next) => {
+        const newUserShoppingItem = {
+            user_shopping_item_id: req.body.user_shopping_item_id,
+            user_shopping_item: req.body.user_shopping_item,
+            user_id: req.user_id,
+        };
+
+        try {
+            const row = await DisasterService.updateUserShoppingItem(req.app.get('db'), req.body.user_shopping_item_id, newUserShoppingItem);
+            
+            if(!row)
+                return res.json({error: 'Shopping not found and thus not updated'});
+        
+            return res.json({message: 'Shopping successfully updated'});
+        } catch(error) {
+            next(error);
+        };
+    })
+    .delete(requireAuth, async(req, res, next) => {
+        const user_shopping_item_id = req.params.userShoppingItemID;
+
+        try {
+            const row = await DisasterService.deleteUserShoppingItem(req.app.get('db'), user_shopping_item_id)
+            
+            if(!row)
+                return res.json({error: 'Shopping not found and thus not deleted'})
         
             return res.json({});
         } catch(error) {

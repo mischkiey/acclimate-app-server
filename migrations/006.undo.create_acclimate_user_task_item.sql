@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS acclimate_user_task_item;
