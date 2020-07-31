@@ -32,32 +32,32 @@ VALUES
     ('Lost-at-Sea recovery step', 'Recovery', 4);
 
 
-INSERT INTO acclimate_user (user_name, user_password, user_full_name)
-VALUES
-    ('Minh', '$2a$04$D6GBjXwWpnDUL1jVafLOnuur9qX4BxY2Cn1xNqCyOr.dN7W1v7UAm', 'Minh N'),
-    ('Nick', '$2a$04$zG8fajgnjA82LoLCrFBSZueDa1nfz5iFb4Vk6I.FDiZplO3526J/y', 'Nick T'),
-    ('Wesley', '$2a$04$QhuicNhYjZLXXYn2RIN9FetYXdQd4pz/Dt/fR8jzyH57.L35Xz92a', 'Wesley R'),
-    ('MattR', '$2a$04$AxnYuuO6JLP20/DUAoJHt.sGhnEzsM5JkanWkhutOVF4GmVT7a3Nu', 'Matt R'),
-    ('Muhajir', '$2a$04$hB4CE0MozX.YaJUyv6N5EempgaG0ZurwoKPJQinXk0bnbqYlGzPOi', 'Muhajir S'),
-    ('Ronnie', '$2a$04$KjyPssM/s332RVQD6/Kx/ez5AQqolYlK.UT2z8WWracdgsEwNbcr2', 'Ronnie H');
+-- INSERT INTO acclimate_user (user_name, user_password, user_full_name)
+-- VALUES
+--     ('Minh', '$2a$04$D6GBjXwWpnDUL1jVafLOnuur9qX4BxY2Cn1xNqCyOr.dN7W1v7UAm', 'Minh N'),
+--     ('Nick', '$2a$04$zG8fajgnjA82LoLCrFBSZueDa1nfz5iFb4Vk6I.FDiZplO3526J/y', 'Nick T'),
+--     ('Wesley', '$2a$04$QhuicNhYjZLXXYn2RIN9FetYXdQd4pz/Dt/fR8jzyH57.L35Xz92a', 'Wesley R'),
+--     ('MattR', '$2a$04$AxnYuuO6JLP20/DUAoJHt.sGhnEzsM5JkanWkhutOVF4GmVT7a3Nu', 'Matt R'),
+--     ('Muhajir', '$2a$04$hB4CE0MozX.YaJUyv6N5EempgaG0ZurwoKPJQinXk0bnbqYlGzPOi', 'Muhajir S'),
+--     ('Ronnie', '$2a$04$KjyPssM/s332RVQD6/Kx/ez5AQqolYlK.UT2z8WWracdgsEwNbcr2', 'Ronnie H');
 
-INSERT INTO acclimate_user_program (user_id, disaster_program_id)
-VALUES
-    (1, 1),
-    (2, 2);
+-- INSERT INTO acclimate_user_program (user_id, disaster_program_id)
+-- VALUES
+--     (1, 1),
+--     (2, 2);
 
-INSERT INTO acclimate_user_task (user_task, user_id)
-VALUES
-    ('Minhs Task Item 1', 1),
-    ('Minhs Task Item 2', 1),
-    ('Nicks Task Item 1', 2),
-    ('Wesleys Task Item 1', 3);
+-- INSERT INTO acclimate_user_task (user_task, user_id)
+-- VALUES
+--     ('Minhs Task Item 1', 1),
+--     ('Minhs Task Item 2', 1),
+--     ('Nicks Task Item 1', 2),
+--     ('Wesleys Task Item 1', 3);
 
-INSERT INTO acclimate_user_shopping_item (user_shopping_item, user_id)
-VALUES
-    ('Minhs Shopping Item 1', 1),
-    ('Minhs Shopping Item 2', 1),
-    ('Nicks Shopping Item 1', 2),
-    ('Wesleys Shopping Item 1', 3);
+-- INSERT INTO acclimate_user_shopping_item (user_shopping_item, user_id)
+-- VALUES
+--     ('Minhs Shopping Item 1', 1),
+--     ('Minhs Shopping Item 2', 1),
+--     ('Nicks Shopping Item 1', 2),
+--     ('Wesleys Shopping Item 1', 3);
 
 COMMIT;
