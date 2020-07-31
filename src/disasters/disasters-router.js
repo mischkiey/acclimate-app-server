@@ -112,17 +112,86 @@ DisastersRoute
     });
 
 DisastersRoute
-    .route('/user/:disasterProgramID')
+    .route('/user/program/:disasterProgramID')
     .delete(requireAuth, async(req, res, next) => {
-        try {
-            const disaster_program_id = req.params.disasterProgramID;
+        const disaster_program_id = req.params.disasterProgramID;
 
+        try {
             const row = await DisasterService.deleteUserProgram(req.app.get('db'), req.user.user_id, disaster_program_id)
 
             if(row)
                 return res.json({});
         
             return res.json({error: 'Program not found and thus not deleted'})
+        } catch(error) {
+            next(error);
+        };
+    });
+
+DisastersRoute
+    .route('/user/task')
+    .get(requireAuth, async(req, res, next) => {
+        try {
+            const tasks = await DisasterService.getUserTasks(req.app.get('db'), req.user.user_id)
+
+            console.log(tasks)
+            if(!tasks)
+                return res.json([]);
+
+            return res.json(tasks);
+        } catch(error) {
+            next(error);
+        };
+    })
+    .post(requireAuth, express.json(), async(req, res, next) => {
+        const { user_task_item } = req.body;
+
+        if (!user_task_item.length)
+            return res.status(400).json({error: `Missing 'task details' in body`});
+
+        const newUserTask = {
+            user_id: req.user.user_id,
+            user_task_item
+        };
+
+        try {
+            const insertedUserTask = await DisasterService.insertUserTask(req.app.get('db'), newUserTask);
+            console.log(insertedUserTask)
+            return res.status(201).json(insertedUserTask);
+        } catch(error) {
+            next(error);
+        };
+    });
+
+DisastersRoute
+    .route('/user/task/:userTaskID')
+    .patch(requireAuth, express.json(), async(req, res, next) => {
+        const newUserTask = req.body;
+        newUserTask.user_id = req.user.user_id;
+
+        try {
+            const user = await DisasterService.updateUserTask(req.app.get('db'), req.user.user_id, newUserTask);
+
+            console.log(user);
+            
+            if(!user)
+                return res.json({error: 'Task not found and thus not updated'});
+        
+            return res.json({message: 'Task successfully updated'});
+        } catch(error) {
+            next(error);
+        };
+    })
+    .delete(requireAuth, async(req, res, next) => {
+        const user_task_item_id = req.params.userTaskID;
+
+        try {
+            const row = await DisasterService.deleteUserTask(req.app.get('db'), user_task_item_id)
+            
+            if(!row)
+                return res.json({error: 'Task not found and thus not deleted'})
+        
+            return res.json({});
         } catch(error) {
             next(error);
         };

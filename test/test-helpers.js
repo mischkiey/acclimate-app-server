@@ -270,13 +270,14 @@ async function seedUsersTable(db, users) {
     await db.raw(`SELECT setval('acclimate_user_user_id_seq', ?)`, users[users.length-1].user_id)
 };
 
-function seedAllTables(db, users, disasters, programs, planSteps, userPrograms) {
+function seedAllTables(db, users, disasters, programs, planSteps, userPrograms, userTaskItems, userShoppingItems) {
     return db.transaction(async (trx) => {
         await seedUsersTable(trx, users); 
         await trx('acclimate_disaster').insert(disasters);
         await trx('acclimate_disaster_program').insert(programs);
         await trx('acclimate_disaster_plan_step').insert(planSteps);
-        await trx('acclimate_user_program').insert(userPrograms);
+        await trx('acclimate_user_task_item').insert(userTaskItems);
+        await trx('acclimate_user_shopping_item').insert(userShoppingItems);
     });
 };
 

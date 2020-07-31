@@ -54,6 +54,32 @@ const DisasterService = {
             .where({user_id, disaster_program_id})
             .del()
     },
+
+    getUserTasks(db, user_id) {
+        return db('acclimate_user_task_item')
+            .select('*')
+            .where({user_id})
+    },
+
+    insertUserTask(db, newUserTask) {
+        return db('acclimate_user_task_item')
+            .insert(newUserTask)
+            .returning('*')
+            .then(([res]) => res)
+    },
+
+    updateUserTask(db, user_task_item_id, newUserTask) {
+        return db('acclimate_user_task_item')
+            .where({user_task_item_id})
+            .update(newUserTask, ['*'])
+    },
+
+    deleteUserTask(db, user_task_item_id) {
+        return db('acclimate_user_task_item')
+            .delete()
+            .where({user_task_item_id})
+    },
+
 };
 
 // SELECT acclimate_disaster_program.disaster_id, acclimate_disaster_program.disaster_program_information, acclimate_disaster_plan_step.disaster_plan_step, acclimate_disaster_plan_step.disaster_plan_step_stage FROM  acclimate_disaster_program JOIN acclimate_disaster_plan_step ON acclimate_disaster_program.disaster_program_id = acclimate_disaster_plan_step.disaster_program_id WHERE acclimate_disaster_plan_step.disaster_program_id = 1

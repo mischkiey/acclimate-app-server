@@ -112,7 +112,14 @@ describe(`Disasters CRUD Endpoints`, () => {
                     .get(`/api/disaster/user/program`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(200)
-            });            
+            });   
+            
+            it(`GET /api/disaster/user/task responds with 200 and all user tasks`, () => {
+                return supertest(app)
+                    .get(`/api/disaster/user/task`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .expect(200)
+            })
         });
     });
 
@@ -158,19 +165,79 @@ describe(`Disasters CRUD Endpoints`, () => {
                             });
                     });
             });
+            it(`POST /api/disaster/user/task responds with 400 and 'Missing 'task details' in body' error`, () => {
+                const invalidUserTaskItem = {
+                    user_id: testUser.user_id,
+                    user_task_item: '',
+                };
+                return supertest(app)
+                    .post(`/api/disaster/user/task`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .send(invalidUserTaskItem)
+                    .expect(400, {error: `Missing 'task details' in body`})
+            });
+            it(`POST /api/disaster/user/task responds with 201 and new user task object`, () => {
+                const newUserTask = {
+                    user_task_item: 'Minh was here!',
+                };
+                return supertest(app)
+                    .post(`/api/disaster/user/task`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .send(newUserTask)
+                    .expect(201)
+                    .then(res => {
+                        expect(res.body.user_id).to.eql(testUser.user_id);
+                        expect(res.body.user_task_item).to.eql(newUserTask.user_task_item);
+                        expect(res.body.user_task_item_id).to.exist;
+                    })
+            });
+        });
+    });
+
+    describe.only(`PATCH Endpoints`, () => {
+        context(`Update item in user list`, () => {
+            beforeEach(`Seed all tables before each test in this context`, () => {
+                return helpers.seedAllTables(db, testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms, testUserTaskItems, testUserShoppingItems)
+            });
+
+            it(`PATCH /api/disaster/user/task/:userTaskID responds with 200 and 'Task successfully updated'`, () => {
+                const newUserTask = {
+                    user_task_item_id: 1,
+                    user_task_item: 'Minh was here!',
+                };
+                return supertest(app)
+                    .patch(`/api/disaster/user/task/${newUserTask.user_task_item_id}`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .send(newUserTask)
+                    .expect(200, {message: 'Task successfully updated'})
+                    .then(() => {
+                        return supertest(app)
+                            .get(`/api/disaster/user/task`)
+                            .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                            .expect(200)
+                            .then(res => {
+                                const insertedUserTask = res.body.filter(userTask => userTask.user_task_item_id === newUserTask.user_task_item_id);
+
+                                expect(insertedUserTask[0].user_id).to.eql(testUser.user_id);
+                                expect(insertedUserTask[0].user_task_item).to.eql(newUserTask.user_task_item);
+                                expect(insertedUserTask[0].user_task_item_id).to.eql(newUserTask.user_task_item_id);
+                            });
+                    });
+            });
+
         });
     });
 
     describe(`DELETE Endpoints`, () => {
         context(`Remove program from user programs`, () => {
-            beforeEach(`Seed all tables before each test in context`, () => {
-                return helpers.seedAllTables(db, testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms)
+            beforeEach(`Seed all tables before each test in this context`, () => {
+                return helpers.seedAllTables(db, testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms, testUserTaskItems, testUserShoppingItems)
             });
             
-            it(`Delete /api/disaster/user/:disasterProgramID responds with 200`, () => {
+            it(`DELETE /api/disaster/user/:disasterProgramID responds with 200`, () => {
                 const disasterProgramID = 1;
                 return supertest(app)
-                    .delete(`/api/disaster/user/${disasterProgramID}`)
+                    .delete(`/api/disaster/user/program/${disasterProgramID}`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(200)
                     .then(() => {
@@ -179,11 +246,36 @@ describe(`Disasters CRUD Endpoints`, () => {
                             .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                             .expect(200)
                             .expect(res => {
-                                const deletedUserProgram = res.body.filter(userProgram => userProgram.user_id === testUser.user_id).filter(userProgram => userProgram.disaster_program_id === disasterProgramID)
+                                const deletedUserProgram = res.body.filter(userProgram => userProgram.user_id === testUser.user_id).filter(userProgram => userProgram.disaster_program_id === disasterProgramID);
                                 
                                 expect(deletedUserProgram).to.be.empty;
                             })
                     })
+            });
+        });
+
+        context(`Remove item from user list`, () => {
+            beforeEach(`Seed all tables before each test in this context`, () => {
+                return helpers.seedAllTables(db, testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms, testUserTaskItems, testUserShoppingItems)
+            });
+
+            it(`DELETE /api/disaster/user/task/:userTaskID responds with 200`, () => {
+                const userTaskItemID = 1;
+                return supertest(app)
+                    .delete(`/api/disaster/user/task/${userTaskItemID}`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .expect(200)
+                    .then(() => {
+                        return supertest(app)
+                            .get(`/api/disaster/user/task`)
+                            .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                            .expect(200)
+                            .expect(res => {
+                                const deletedUserTask = res.body.filter(userTask => userTask.user_task_item_id === userTaskItemID)
+                           
+                                expect(deletedUserTask).to.be.empty;
+                            });
+                    });
             });
         });
     });
