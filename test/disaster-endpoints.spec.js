@@ -97,7 +97,7 @@ describe(`Disasters CRUD Endpoints`, () => {
         });
     });
 
-    describe.only(`POST Endpoints`, () => {
+    describe(`POST Endpoints`, () => {
         context(`Add program to user programs`, () => {
             beforeEach(`Seed all tables before each test in context`, () => {
                 return helpers.seedAllTables(db, testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms, testUserTasks, testUserShoppingItems)

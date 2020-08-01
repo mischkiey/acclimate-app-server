@@ -1,0 +1,1 @@
+TRUNCATE acclimate_disaster, acclimate_disaster_program, acclimate_disaster_plan_step, acclimate_user, acclimate_user_program, acclimate_user_task, acclimate_user_shopping_item RESTART IDENTITY CASCADE;
