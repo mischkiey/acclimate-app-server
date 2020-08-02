@@ -24,7 +24,7 @@ VALUES
     ('Wildfire readiness step', 'Readiness', 'Task', 'Shorthand wildfire readiness step', 2),
     ('Wildfire response step', 'Response', NULL, NULL, 2),
     ('Wildfire recovery step', 'Recovery', NULL, NULL, 2),
-    ('Nuclear explosion readiness step', 'Readiness', 'Shopping Item', 'Shorthand nuclear readiness step', 3),
+    ('Nuclear explosion readiness step', 'Readiness', 'Shopping Item', 'Shorthand nuclear explosion readiness step', 3),
     ('Nuclear explosion response step', 'Response', NULL, NULL, 3),
     ('Nuclear explosion recovery step', 'Recovery', NULL, NULL, 3),
     ('Lost-at-Sea readiness step', 'Readiness', 'Shopping Item', 'Shorthand lost-at-sea readiness step', 4),

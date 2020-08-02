@@ -106,72 +106,96 @@ function makeDisasterPlanStepFixture() {
             disaster_plan_step_id: 1,
             disaster_plan_step: 'Blizzard readiness step',
             disaster_plan_step_stage: 'Readiness',
+            disaster_plan_step_itemable_type: 'Task',
+            disaster_plan_step_itemable_shorthand: 'Shorthand blizzard readiness step',
             disaster_program_id: 1
         },
         {
             disaster_plan_step_id: 2,
             disaster_plan_step: 'Blizzard response step',
             disaster_plan_step_stage: 'Response',
+            disaster_plan_step_itemable_type: null,
+            disaster_plan_step_itemable_shorthand: null,
             disaster_program_id: 1
         },
         {
             disaster_plan_step_id: 3,
             disaster_plan_step: 'Blizzard recovery step',
             disaster_plan_step_stage: 'Recovery',
+            disaster_plan_step_itemable_type: null,
+            disaster_plan_step_itemable_shorthand: null,
             disaster_program_id: 1
         },
         {
             disaster_plan_step_id: 4,
             disaster_plan_step: 'Wildfire readiness step',
             disaster_plan_step_stage: 'Readiness',
+            disaster_plan_step_itemable_type: 'Task',
+            disaster_plan_step_itemable_shorthand: 'Shorthand wildfire readiness step',
             disaster_program_id: 2
         },
         {
             disaster_plan_step_id: 5,
             disaster_plan_step: 'Wildfire response step',
             disaster_plan_step_stage: 'Response',
+            disaster_plan_step_itemable_type: null,
+            disaster_plan_step_itemable_shorthand: null,
             disaster_program_id: 2
         },
         {
             disaster_plan_step_id: 6,
             disaster_plan_step: 'Wildfire recoveru step',
             disaster_plan_step_stage: 'Recovery',
+            disaster_plan_step_itemable_type: null,
+            disaster_plan_step_itemable_shorthand: null,
             disaster_program_id: 2
         },
         {
             disaster_plan_step_id: 7,
             disaster_plan_step: 'Nuclear explosion readiness step',
             disaster_plan_step_stage: 'Readiness',
+            disaster_plan_step_itemable_type: 'Shopping Item',
+            disaster_plan_step_itemable_shorthand: 'Shorthand nuclear explosion readiness step',
             disaster_program_id: 3
         },
         {
             disaster_plan_step_id: 8,
             disaster_plan_step: 'Nuclear explosion response step',
             disaster_plan_step_stage: 'Response',
+            disaster_plan_step_itemable_type: null,
+            disaster_plan_step_itemable_shorthand: null,
             disaster_program_id: 3
         },
         {
             disaster_plan_step_id: 9,
             disaster_plan_step: 'Nuclear explosion recovery step',
             disaster_plan_step_stage: 'Recovery',
+            disaster_plan_step_itemable_type: null,
+            disaster_plan_step_itemable_shorthand: null,
             disaster_program_id: 3
         },
         {
             disaster_plan_step_id: 10,
             disaster_plan_step: 'Lost-at-Sea readiness step',
             disaster_plan_step_stage: 'Readiness',
+            disaster_plan_step_itemable_type: 'Shopping Item',
+            disaster_plan_step_itemable_shorthand: 'Shorthand lost-at-sea readiness step',
             disaster_program_id: 4
         },
         {
             disaster_plan_step_id: 11,
             disaster_plan_step: 'Lost-at-Sea response step',
             disaster_plan_step_stage: 'Response',
+            disaster_plan_step_itemable_type: null,
+            disaster_plan_step_itemable_shorthand: null,
             disaster_program_id: 4
         },
         {
             disaster_plan_step_id: 12,
             disaster_plan_step: 'Lost-at-Sea recovery step',
             disaster_plan_step_stage: 'Recovery',
+            disaster_plan_step_itemable_type: null,
+            disaster_plan_step_itemable_shorthand: null,
             disaster_program_id: 4
         },
     ];
