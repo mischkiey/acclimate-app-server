@@ -16,20 +16,20 @@ VALUES
     ('About the nuclear explosion disaster program', 3),
     ('About the lost-at-sea situation program', 4);
 
-INSERT INTO acclimate_disaster_plan_step (disaster_plan_step, disaster_plan_step_stage, disaster_program_id)
+INSERT INTO acclimate_disaster_plan_step (disaster_plan_step, disaster_plan_step_stage, disaster_plan_step_itemable_type, disaster_plan_step_itemable_shorthand, disaster_program_id)
 VALUES
-    ('Blizzard readiness step', 'Readiness', 1),
-    ('Blizzard response step', 'Response', 1),
-    ('Blizzard recovery step', 'Recovery', 1),
-    ('Wildfire readiness step', 'Readiness', 2),
-    ('Wildfire response step', 'Response', 2),
-    ('Wildfire recovery step', 'Recovery', 2),
-    ('Nuclear explosion readiness step', 'Readiness', 3),
-    ('Nuclear explosion response step', 'Response', 3),
-    ('Nuclear explosion recovery step', 'Recovery', 3),
-    ('Lost-at-Sea readiness step', 'Readiness', 4),
-    ('Lost-at-Sea response step', 'Response', 4),
-    ('Lost-at-Sea recovery step', 'Recovery', 4);
+    ('Blizzard readiness step', 'Readiness', 'Task', 'Shorthand blizzard readiness step', 1),
+    ('Blizzard response step', 'Response', NULL, NULL, 1),
+    ('Blizzard recovery step', 'Recovery', NULL, NULL, 1),
+    ('Wildfire readiness step', 'Readiness', 'Task', 'Shorthand wildfire readiness step', 2),
+    ('Wildfire response step', 'Response', NULL, NULL, 2),
+    ('Wildfire recovery step', 'Recovery', NULL, NULL, 2),
+    ('Nuclear explosion readiness step', 'Readiness', 'Shopping Item', 'Shorthand nuclear readiness step', 3),
+    ('Nuclear explosion response step', 'Response', NULL, NULL, 3),
+    ('Nuclear explosion recovery step', 'Recovery', NULL, NULL, 3),
+    ('Lost-at-Sea readiness step', 'Readiness', 'Shopping Item', 'Shorthand lost-at-sea readiness step', 4),
+    ('Lost-at-Sea response step', 'Response', NULL, NULL, 4),
+    ('Lost-at-Sea recovery step', 'Recovery', NULL, NULL, 4);
 
 
 -- INSERT INTO acclimate_user (user_name, user_password, user_full_name)
