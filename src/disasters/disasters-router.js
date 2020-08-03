@@ -170,6 +170,7 @@ DisastersRoute
         const newUserTask = {
             user_task_id: req.body.user_task_id,
             user_task: req.body.user_task,
+            user_task_completed: req.body.user_task_completed,
             user_id: req.user_id,
         };
 
@@ -239,6 +240,7 @@ DisastersRoute
         const newUserShoppingItem = {
             user_shopping_item_id: req.body.user_shopping_item_id,
             user_shopping_item: req.body.user_shopping_item,
+            user_shopping_item_completed: req.body.user_shopping_item_completed,
             user_id: req.user_id,
         };
 

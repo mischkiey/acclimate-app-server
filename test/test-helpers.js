@@ -227,21 +227,25 @@ function makeUserTaskFixture() {
         {
             user_task_id: 1,
             user_task: `Minh's Task Item 1`,
+            user_task_completed: false,
             user_id: 1,
         },
         {
             user_task_id: 2,
             user_task: `Minh's Task Item 2`,
+            user_task_completed: false,
             user_id: 1,
         },
         {
             user_task_id: 3,
             user_task: `Nick's Task Item 1`,
+            user_task_completed: false,
             user_id: 2,
         },
         {
             user_task_id: 4,
             user_task: `Wesley's Task Item 1`,
+            user_task_completed: false,
             user_id: 3,
         },
     ]
@@ -252,21 +256,25 @@ function makeUserShoppingItemFixture() {
         {
             user_shopping_item_id: 1,
             user_shopping_item: `Minh's Shopping Item 1`,
+            user_shopping_item_completed: false,
             user_id: 1,
         },
         {
             user_shopping_item_id: 2,
             user_shopping_item: `Minh's Shopping Item 2`,
+            user_shopping_item_completed: false,
             user_id: 1,
         },
         {
             user_shopping_item_id: 3,
             user_shopping_item: `Nick's Shopping Item 1`,
+            user_shopping_item_completed: false,
             user_id: 2,
         },
         {
             user_shopping_item_id: 4,
             user_shopping_item: `Wesley's Shopping Item 1`,
+            user_shopping_item_completed: false,
             user_id: 3,
         },
     ]

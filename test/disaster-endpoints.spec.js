@@ -1,6 +1,7 @@
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
+const supertest = require('supertest');
 
 describe(`Disasters CRUD Endpoints`, () => {
     let db;
@@ -97,6 +98,16 @@ describe(`Disasters CRUD Endpoints`, () => {
                     .expect(200)
             });
         });
+
+        // context(`Given an XSS attack post`, () => {
+        //     it(`GET /api/disaster/user/shopping responds with 200 and removes XSS content`, () => {
+        //         const maliciousShoppingItem = {
+        //             user_shopping_item: `<script>alert("xss");</script> <img src="https://test.com" onerror="alert(document.cookie);"> <strong>test</strong>`
+        //         };
+        //         return supertest(app)
+        //             .post(``)
+        //     })
+        // })
     });
 
     describe(`POST Endpoints`, () => {
@@ -172,7 +183,6 @@ describe(`Disasters CRUD Endpoints`, () => {
 
             it(`POST /api/disaster/user/shopping responds with 400 and 'Missing 'shopping details' in body' error`, () => {
                 const invalidUserShoppingItem = {
-                    user_id: testUser.user_id,
                     user_shopping_item: '',
                 };
                 return supertest(app)
@@ -210,6 +220,7 @@ describe(`Disasters CRUD Endpoints`, () => {
                 const newUserTask = {
                     user_task_id: 1,
                     user_task: 'Minh was here!',
+                    user_task_completed: false,
                 };
                 return supertest(app)
                     .patch(`/api/disaster/user/task/${newUserTask.user_task_id}`)
@@ -235,6 +246,7 @@ describe(`Disasters CRUD Endpoints`, () => {
                 const newUserShoppingItem = {
                     user_shopping_item_id: 1,
                     user_shopping_item: 'Minh was here!',
+                    user_shopping_item_completed: false,
                 };
                 return supertest(app)
                     .patch(`/api/disaster/user/shopping/${newUserShoppingItem.user_shopping_item_id}`)

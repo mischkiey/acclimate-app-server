@@ -123,6 +123,19 @@ describe(`Users Endpoint`, () => {
                     .expect(400, {error: 'Username not available'})
             });
 
+            // it(`POST /api/user responds with 400 and 'Username must not have spaces' error when user_name with spaces`, () => {
+            //     const spacedUserName = {
+            //         user_name: ,
+            //         user_password: '!!!AAaa00',
+            //         user_full_name: 'Michelle Colacion Francisco'
+            //     };
+
+            //     return supertest(app)
+            //         .post('/api/user')
+            //         .send(duplicateUserName)
+            //         .expect(400, {error: 'Username not available'})
+            // });
+
             it(`POST /api/user responds with 201 and new user object`, () => {
                 const validSignUpInputs = {
                     user_name: 'Miki',
@@ -144,9 +157,17 @@ describe(`Users Endpoint`, () => {
                         expect(res.headers.location).to.equal(`/api/user/${res.body.user_id}`);
                     })
             });
+        });
 
-
-        })
-    })
+        // context(`Given an XSS attack`, () => {
+        //     it(`POST /api/user responds with 200 and removes XSS content`, () => {
+        //         const maliciousSignUpInputs = {
+        //             user_name: 'dummy_user_name OR 1 = 1',
+        //             user_password: '',
+        //             user_full_name: '',
+        //         };
+        //     });
+        // });
+    });
 
 });
