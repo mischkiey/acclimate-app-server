@@ -67,10 +67,13 @@ DisastersRoute
             const userProgramsListDetails = await Promise.all(userProgramsList.map(async userProgram => { 
                 const program = await DisasterService.getDisasterProgramByID(req.app.get('db'), userProgram.disaster_program_id);
 
+                const { disaster_name } = await DisasterService.getDisasterByID(req.app.get('db'), program.disaster_id);
+
                 const steps = await DisasterService.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id);        
                 
                 return {
                     disaster_id: program.disaster_id,
+                    disaster_name,
                     disaster_program_id: program.disaster_program_id,
                     disaster_program_information: program.disaster_program_information,
                     disaster_plan_steps: steps,

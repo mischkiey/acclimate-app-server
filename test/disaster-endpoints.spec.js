@@ -61,13 +61,11 @@ describe(`Disasters CRUD Endpoints`, () => {
                     disaster_program_information: testDisasterPrograms[0].disaster_program_information,
                     disaster_plan_steps: expectedDisasterPlanSteps,
                 };
-                console.log(expectedDisasterProgram)
                 return supertest(app)
                     .get(`/api/disaster/program/${disasterID}`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))
                     .expect(200, expectedDisasterProgram)
                     .expect(res => {
-                        console.log(res.body)
                     })
             });
 
