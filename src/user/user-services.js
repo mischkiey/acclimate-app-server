@@ -1,9 +1,11 @@
 const bcrypt = require('bcryptjs');
 const xss = require('xss');
-// const REGEX_WHITE_SPACE = 
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/;
 
 const UserService = {
+
+    // New User/ User Signup Services
+
     validateUserPassword(user_password) {
         if (user_password.length <= 8) 
             return 'Password must be longer than 8 characters';
@@ -45,6 +47,85 @@ const UserService = {
             user_full_name: xss(user.user_full_name),
             user_date_created: user.user_date_created,
         }
+    },
+
+    // Main User Services
+
+    getUserProgramsByID(db, id) {
+        return db('acclimate_user_program')
+            .select('*')
+            .where(id)
+    },
+
+    getUserProgram(db, user_id, disaster_program_id) {
+        return db('acclimate_user_program')
+            .select('*')
+            .where({user_id, disaster_program_id})
+    },
+
+    insertUserProgram(db, newUserProgram) {
+        return db('acclimate_user_program')
+            .insert(newUserProgram)
+            .returning('*')
+            .then(([res]) => res)
+    },
+
+    deleteUserProgram(db, user_id, disaster_program_id) {
+        return db('acclimate_user_program')
+            .where({user_id, disaster_program_id})
+            .del()
+    },
+
+    getUserTasks(db, user_id) {
+        return db('acclimate_user_task')
+            .select('*')
+            .where({user_id})
+            .orderBy('user_task_id')
+    },
+
+    insertUserTask(db, newUserTask) {
+        return db('acclimate_user_task')
+            .insert(newUserTask)
+            .returning('*')
+            .then(([res]) => res)
+    },
+
+    updateUserTask(db, user_task_id, newUserTask) {
+        return db('acclimate_user_task')
+            .where({user_task_id})
+            .update(newUserTask, ['*'])
+    },
+
+    deleteUserTask(db, user_task_id) {
+        return db('acclimate_user_task')
+            .delete()
+            .where({user_task_id})
+    },
+
+    getUserShoppingItems(db, user_id) {
+        return db('acclimate_user_shopping_item')
+            .select('*')
+            .where({user_id})
+            .orderBy('user_shopping_item_id')
+    },
+
+    insertUserShoppingItem(db, newUserShoppingItem) {
+        return db('acclimate_user_shopping_item')
+            .insert(newUserShoppingItem)
+            .returning('*')
+            .then(([res]) => res)
+    },
+
+    updateUserShoppingItem(db, user_shopping_item_id, newUserShoppingItem) {
+        return db('acclimate_user_shopping_item')
+            .where({user_shopping_item_id})
+            .update(newUserShoppingItem, ['*'])
+    },
+
+    deleteUserShoppingItem(db, user_shopping_item_id) {
+        return db('acclimate_user_shopping_item')
+            .delete()
+            .where({user_shopping_item_id})
     },
 };
 
