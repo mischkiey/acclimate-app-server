@@ -1,3 +1,5 @@
+const xss = require('xss');
+
 const DisasterService = {
     getDisasters(db) {
         return db('acclimate_disaster')
@@ -108,9 +110,6 @@ const DisasterService = {
     },
 
 };
-
-// SELECT acclimate_disaster_program.disaster_id, acclimate_disaster_program.disaster_program_information, acclimate_disaster_plan_step.disaster_plan_step, acclimate_disaster_plan_step.disaster_plan_step_stage FROM  acclimate_disaster_program JOIN acclimate_disaster_plan_step ON acclimate_disaster_program.disaster_program_id = acclimate_disaster_plan_step.disaster_program_id WHERE acclimate_disaster_plan_step.disaster_program_id = 1
-// ;
 
 
 module.exports = DisasterService;

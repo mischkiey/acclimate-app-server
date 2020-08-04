@@ -1,11 +1,10 @@
 const express = require('express');
+const xss = require('xss');
 
 const DisasterService = require('./disasters-services');
 const { requireAuth } = require('../middleware/jwt-auth');
 
 const DisastersRoute = express.Router();
-
-// Todo: XSS
 
 DisastersRoute
     .route('/')
@@ -69,14 +68,23 @@ DisastersRoute
 
                 const { disaster_name } = await DisasterService.getDisasterByID(req.app.get('db'), program.disaster_id);
 
-                const steps = await DisasterService.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id);        
+                const steps = await DisasterService.getDisasterPlanStepsByID(req.app.get('db'), program.disaster_program_id);
+                
+                const sanitizedSteps = steps.map(step => ({
+                    disaster_plan_step_id: step.disaster_plan_step_id,
+                    disaster_plan_step: xss(step.disaster_plan_step),
+                    disaster_plan_step_stage: xss(step.disaster_plan_step_stage),
+                    disaster_plan_step_itemable_type: xss(step.disaster_plan_step_itemable_type),
+                    disaster_plan_step_itemable_shorthand: xss(step.disaster_plan_step_itemable_shorthand),
+                }));
+
                 
                 return {
                     disaster_id: program.disaster_id,
-                    disaster_name,
+                    disaster_name: xss(disaster_name),
                     disaster_program_id: program.disaster_program_id,
-                    disaster_program_information: program.disaster_program_information,
-                    disaster_plan_steps: steps,
+                    disaster_program_information: xss(program.disaster_program_information),
+                    disaster_plan_steps: sanitizedSteps,
                 };
             }));
             return res.json(userProgramsListDetails);
@@ -226,7 +234,9 @@ DisastersRoute
         };
 
         try {
-            const insertedUserShoppingItem = await DisasterService.insertUserShoppingItem(req.app.get('db'), newUserShoppingItem);
+            let insertedUserShoppingItem = await DisasterService.insertUserShoppingItem(req.app.get('db'), newUserShoppingItem);
+
+            insertedUserShoppingItem.user_shopping_item = xss(insertedUserShoppingItem.user_shopping_item);
 
             return res.status(201).json(insertedUserShoppingItem);
         } catch(error) {

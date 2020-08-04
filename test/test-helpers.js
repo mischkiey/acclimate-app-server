@@ -144,7 +144,7 @@ function makeDisasterPlanStepFixture() {
         },
         {
             disaster_plan_step_id: 6,
-            disaster_plan_step: 'Wildfire recoveru step',
+            disaster_plan_step: 'Wildfire recovery step',
             disaster_plan_step_stage: 'Recovery',
             disaster_plan_step_itemable_type: null,
             disaster_plan_step_itemable_shorthand: null,
@@ -308,6 +308,7 @@ function seedAllTables(db, users, disasters, programs, planSteps, userPrograms, 
         await trx('acclimate_disaster').insert(disasters);
         await trx('acclimate_disaster_program').insert(programs);
         await trx('acclimate_disaster_plan_step').insert(planSteps);
+        await trx('acclimate_user_program').insert(userPrograms);
         await trx('acclimate_user_task').insert(userTasks);
         await db.raw(`SELECT setval('acclimate_user_task_user_task_id_seq', ?)`, userTasks[userTasks.length-1].user_task_id)
         await trx('acclimate_user_shopping_item').insert(userShoppingItems);

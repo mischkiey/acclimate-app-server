@@ -102,12 +102,25 @@ describe(`Disasters CRUD Endpoints`, () => {
         // context(`Given an XSS attack post`, () => {
         //     it(`GET /api/disaster/user/shopping responds with 200 and removes XSS content`, () => {
         //         const maliciousShoppingItem = {
-        //             user_shopping_item: `<script>alert("xss");</script> <img src="https://test.com" onerror="alert(document.cookie);"> <strong>test</strong>`
+        //             user_id: 911,
+        //             user_shopping_item: `<script>alert("xss");</script> <img src="https://test.com" onerror="alert(document.cookie);"> <strong>test</strong>`,
+        //             user_shopping_item_id: 911,
         //         };
+
+        //         beforeEach(`Inserts malicious content into the database`, () => {
+        //             return db
+        //                 .into('acclimate_user_shopping_item')
+        //                 .insert(maliciousShoppingItem)
+        //         });
+
         //         return supertest(app)
-        //             .post(``)
-        //     })
-        // })
+        //             .get(`/user/shopping`)
+        //             .expect(200)
+        //             .expect(res => {
+        //                 res.body.
+        //             })
+        //     });
+        // });
     });
 
     describe(`POST Endpoints`, () => {
