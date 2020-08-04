@@ -3,10 +3,10 @@ const app = require('../src/app');
 const helpers = require('./test-helpers');
 const { expect } = require('chai');
 
-describe(`Users Endpoint`, () => {
+describe.skip(`Users CRUD Endpoint`, () => {
     let db;
 
-    const { testUsers } = helpers.makeAllFixtures();
+    const { testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms, testUserTasks, testUserShoppingItems } = helpers.makeAllFixtures();
     const testUser = testUsers[0];
 
     before(`Make a connection`, () => {
@@ -22,10 +22,46 @@ describe(`Users Endpoint`, () => {
     afterEach(`Clean tables after each test`, () => helpers.truncateAllTables(db));
     after(`Destroy the connection`, () => db.destroy());
 
-    describe(`POST /api/user`, function() {
+    describe(`GET Endpoints`, function() {
+        context(`Given data in database`, () => {
+            beforeEach(`Seed all tables before each test in this context`, () => {
+                return helpers.seedAllTables(db, testUsers, testDisasters, testDisasterPrograms, testDisasterPlanSteps, testUserPrograms, testUserTasks, testUserShoppingItems);
+            });
+
+            it(`GET /api/user/program responds with 200 and empty array when user has not selected programs prior`, () => {
+                return supertest(app)
+                    .get(`/api/user/program`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUsers[5]))
+                    .expect(200, []);
+            });
+            
+            it(`GET /api/user/program responds with 200 and all user programs`, () => {
+                return supertest(app)
+                    .get(`/api/user/program`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .expect(200)
+            });   
+            
+            it(`GET /api/user/task responds with 200 and all user tasks`, () => {
+                return supertest(app)
+                    .get(`/api/user/task`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .expect(200);
+            });
+
+            it(`GET /api/user/shopping responds with 200 and all user shopping items`, () => {
+                return supertest(app)
+                    .get(`/api/user/shopping`)
+                    .set('Authorization', helpers.makeJWTAuthHeader(testUser))
+                    .expect(200);
+            });
+        });
+    });
+
+    describe(`POST Endpoints`, function() {
         this.retries(3);
 
-        context(`User Validation`, () => {
+        context(`New/Signup User Validation`, () => {
             const requiredFields = ['user_name', 'user_password', 'user_full_name'];
 
             requiredFields.forEach(field => {
@@ -123,19 +159,6 @@ describe(`Users Endpoint`, () => {
                     .expect(400, {error: 'Username not available'})
             });
 
-            // it(`POST /api/user responds with 400 and 'Username must not have spaces' error when user_name with spaces`, () => {
-            //     const spacedUserName = {
-            //         user_name: ,
-            //         user_password: '!!!AAaa00',
-            //         user_full_name: 'Michelle Colacion Francisco'
-            //     };
-
-            //     return supertest(app)
-            //         .post('/api/user')
-            //         .send(duplicateUserName)
-            //         .expect(400, {error: 'Username not available'})
-            // });
-
             it(`POST /api/user responds with 201 and new user object`, () => {
                 const validSignUpInputs = {
                     user_name: 'Miki',
@@ -158,16 +181,5 @@ describe(`Users Endpoint`, () => {
                     })
             });
         });
-
-        // context(`Given an XSS attack`, () => {
-        //     it(`POST /api/user responds with 200 and removes XSS content`, () => {
-        //         const maliciousSignUpInputs = {
-        //             user_name: 'dummy_user_name OR 1 = 1',
-        //             user_password: '',
-        //             user_full_name: '',
-        //         };
-        //     });
-        // });
     });
-
 });
