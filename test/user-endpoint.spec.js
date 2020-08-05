@@ -230,7 +230,7 @@ describe(`Users CRUD Endpoint`, () => {
                 return supertest(app)
                     .post(`/api/user/task`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))
-                    .send(invalidUserTask)
+                    .send([invalidUserTask])
                     .expect(400, {error: `Missing 'task details' in body`})
             });
 
@@ -241,12 +241,14 @@ describe(`Users CRUD Endpoint`, () => {
                 return supertest(app)
                     .post(`/api/user/task`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))
-                    .send(newUserTask)
+                    .send([newUserTask])
                     .expect(201)
                     .then(res => {
-                        expect(res.body.user_id).to.eql(testUser.user_id);
-                        expect(res.body.user_task).to.eql(newUserTask.user_task);
-                        expect(res.body.user_task_id).to.exist;
+                        res.body.forEach(task => {
+                            expect(task.user_id).to.eql(testUser.user_id);
+                            expect(task.user_task).to.eql(newUserTask.user_task);
+                            expect(task.user_task_id).to.exist;
+                        })
                     })
             });
 
@@ -257,8 +259,8 @@ describe(`Users CRUD Endpoint`, () => {
                 return supertest(app)
                     .post(`/api/user/shopping`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))
-                    .send(invalidUserShoppingItem)
-                    .expect(400, {error: `Missing 'shopping details' in body`})
+                    .send([invalidUserShoppingItem])
+                    .expect(400, {error: `Missing 'shopping item details' in body`})
             });
 
             it(`POST /api/user/shopping responds with 201 and new user shopping object`, () => {
@@ -268,12 +270,14 @@ describe(`Users CRUD Endpoint`, () => {
                 return supertest(app)
                     .post(`/api/user/shopping`)
                     .set('Authorization', helpers.makeJWTAuthHeader(testUser))
-                    .send(newUserShoppingItem)
+                    .send([newUserShoppingItem])
                     .expect(201)
                     .then(res => {
-                        expect(res.body.user_id).to.eql(testUser.user_id);
-                        expect(res.body.user_shopping_item).to.eql(newUserShoppingItem.user_shopping_item);
-                        expect(res.body.user_shopping_item_id).to.exist;
+                        res.body.forEach(shoppingItem => {
+                            expect(shoppingItem.user_id).to.eql(testUser.user_id);
+                            expect(shoppingItem.user_shopping_item).to.eql(newUserShoppingItem.user_shopping_item);
+                            expect(shoppingItem.user_shopping_item_id).to.exist;
+                        })
                     });
             });
         });

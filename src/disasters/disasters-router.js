@@ -1,5 +1,5 @@
 const express = require('express');
-const path = require('path')
+const path = require('path');
 const xss = require('xss');
 
 const DisasterService = require('./disasters-services');

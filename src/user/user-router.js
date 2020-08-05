@@ -150,19 +150,23 @@ UserRoute
         };
     })
     .post(requireAuth, express.json(), async(req, res, next) => {
-        const { user_task } = req.body;
+        const newUserTasks = req.body
 
-        if (!user_task.length)
+        // Turn this into a mixin
+        for(let i = 0; i < newUserTasks.length; i++ ) {
+            newUserTasks[i].user_id = req.user.user_id;
+        };
+        
+        const invalidUserTasks = newUserTasks.filter(task => !task.user_task.length);
+
+        if(invalidUserTasks.length) {
             return res.status(400).json({error: `Missing 'task details' in body`});
-
-        const newUserTask = {
-            user_id: req.user.user_id,
-            user_task,
         };
 
         try {
-            const insertedUserTask = await UserService.insertUserTask(req.app.get('db'), newUserTask);
-            return res.status(201).json(insertedUserTask);
+            const insertedUserTasks = await UserService.insertUserTask(req.app.get('db'), newUserTasks);
+
+            return res.status(201).json(insertedUserTasks);
         } catch(error) {
             next(error);
         };
@@ -175,7 +179,7 @@ UserRoute
             user_task_id: req.body.user_task_id,
             user_task: req.body.user_task,
             user_task_completed: req.body.user_task_completed,
-            user_id: req.user_id,
+            user_id: req.user.user_id,
         };
 
         try {
@@ -219,22 +223,22 @@ UserRoute
         };
     })
     .post(requireAuth, express.json(), async(req, res, next) => {
-        const { user_shopping_item } = req.body;
+        const newUserShoppingItems = req.body;
 
-        if (!user_shopping_item.length)
-            return res.status(400).json({error: `Missing 'shopping details' in body`});
+        for(let i = 0; i < newUserShoppingItems.length; i++ ) {
+            newUserShoppingItems[i].user_id = req.user.user_id;
+        };
 
-        const newUserShoppingItem = {
-            user_id: req.user.user_id,
-            user_shopping_item
+        const invalidUserShoppingItems = newUserShoppingItems.filter(shoppingItem => !shoppingItem.user_shopping_item.length);
+
+        if(invalidUserShoppingItems.length) {
+            return res.status(400).json({error: `Missing 'shopping item details' in body`});
         };
 
         try {
-            let insertedUserShoppingItem = await UserService.insertUserShoppingItem(req.app.get('db'), newUserShoppingItem);
+            const insertedUserShoppingItems = await UserService.insertUserShoppingItem(req.app.get('db'), newUserShoppingItems);
 
-            insertedUserShoppingItem.user_shopping_item = xss(insertedUserShoppingItem.user_shopping_item);
-
-            return res.status(201).json(insertedUserShoppingItem);
+            return res.status(201).json(insertedUserShoppingItems);
         } catch(error) {
             next(error);
         };
@@ -247,7 +251,7 @@ UserRoute
             user_shopping_item_id: req.body.user_shopping_item_id,
             user_shopping_item: req.body.user_shopping_item,
             user_shopping_item_completed: req.body.user_shopping_item_completed,
-            user_id: req.user_id,
+            user_id: req.user.user_id,
         };
 
         try {

@@ -87,7 +87,6 @@ const UserService = {
         return db('acclimate_user_task')
             .insert(newUserTask)
             .returning('*')
-            .then(([res]) => res)
     },
 
     updateUserTask(db, user_task_id, newUserTask) {
@@ -113,7 +112,6 @@ const UserService = {
         return db('acclimate_user_shopping_item')
             .insert(newUserShoppingItem)
             .returning('*')
-            .then(([res]) => res)
     },
 
     updateUserShoppingItem(db, user_shopping_item_id, newUserShoppingItem) {
