@@ -11,23 +11,27 @@ const UserRoute = express.Router();
 UserRoute
     .route('/')
     .post(express.json(), (req, res, next) => {
-        const {user_name, user_password } = req.body;
+        const {user_name, user_password, user_full_name } = req.body;
 
+        // Check for missing signup inputs 
         for(const field of ['user_name', 'user_password', 'user_full_name'])
             if(!req.body[field])
                 return res.status(400).json({error: `Missing '${field}' in body`})
 
+        // Validate password (see validateUserPassword method in user-services.js)
         const passwordError = UserService.validateUserPassword(user_password);
 
         if(passwordError)
             return res.status(400).json({error: passwordError})
         
+        // Check username availability
         return UserService.hasUserWithUserName(req.app.get('db'), user_name)
             .then(hasUserWithUserName => {
                 if(hasUserWithUserName) {
                     return res.status(400).json({error: 'Username not available'})
                 }
 
+                // If username is available, prepare credentials for storage in database
                 return UserService.hashUserPassword(user_password)
                     .then(hashedUserPassword => {
 
@@ -35,7 +39,8 @@ UserRoute
                             ...req.body,
                             user_password: hashedUserPassword,
                         }
-        
+
+                        // Hash password then insert into database
                         return UserService.insertUser(req.app.get('db'), newUser)
                             .then(user => {
                                 return res
@@ -53,11 +58,21 @@ UserRoute
     .route('/program')
     .get(requireAuth, async(req, res, next) => {
         try {
+            // Retrieve list of user programs
             const userProgramsList = await UserService.getUserProgramsByID(req.app.get('db'), {user_id: req.user.user_id});
 
+            // Return 200 OK and empty array if list is empty
             if(!userProgramsList.length)
                 return res.status(200).json([]);
 
+            // For each program in the userProgramsList array:
+            // Retrieve program data from a table called acclimate_disaster_program and set to a variable called program
+            // Retrieve disaster name from a table called acclimate_disaster and set to a variable called disaster_name
+            // Retrieve steps data from a table called acclimate_disaster_plan_steps and set to a variable called steps
+            // Sanitize steps
+            // Consolidate program, disaster_name, and steps into an object
+            // Return sanitized object as an element of userProgramsListDetails
+            // Return 200 OK and userProgramsListDetails
             const userProgramsListDetails = await Promise.all(userProgramsList.map(async userProgram => { 
                 const program = await DisasterService.getDisasterProgramByID(req.app.get('db'), userProgram.disaster_program_id);
 
