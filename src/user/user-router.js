@@ -38,7 +38,6 @@ UserRoute
         
                         return UserService.insertUser(req.app.get('db'), newUser)
                             .then(user => {
-                                        
                                 return res
                                 .status(201)
                                 .location(path.posix.join(req.originalUrl, `/${user.user_id}`))
@@ -152,7 +151,7 @@ UserRoute
     .post(requireAuth, express.json(), async(req, res, next) => {
         const newUserTasks = req.body
 
-        // Turn this into a mixin
+        // Maybe have a mixin service object
         for(let i = 0; i < newUserTasks.length; i++ ) {
             newUserTasks[i].user_id = req.user.user_id;
         };
