@@ -12,6 +12,7 @@ DisastersRoute
     .get(requireAuth, (req, res, next) => {
         return DisasterService.getDisasters(req.app.get('db'))
             .then(disasters => {
+                // Return an array of disasters data objects
                 return res.json(disasters);
             })
             .catch(next)
@@ -21,6 +22,9 @@ DisastersRoute
     .route('/:disasterID')
     .get(requireAuth, (req, res, next) => {
         const disaster_id = req.params.disasterID;
+        // Retrieve data on desired disaster
+        // If there is no match in database, return 400 Bad Request and appropriate error message
+        // Return an array of desired disaster data object
         return DisasterService.getDisasterByID(req.app.get('db'), disaster_id)
             .then(disaster => {
                 if(!disaster)
@@ -35,6 +39,9 @@ DisastersRoute
     .route('/program/:disasterID')
     .get(requireAuth, async(req, res, next) => {
         const disaster_id = req.params.disasterID;
+        // Retrieve data on desired disaster program
+        // If there is no match in database, return 400 Bad Request and appropriate error message
+        // Return an array containing desired disaster program data object
         try {
             const program = await DisasterService.getDisasterProgramByID(req.app.get('db'), disaster_id);
 
