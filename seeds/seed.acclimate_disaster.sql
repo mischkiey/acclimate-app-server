@@ -84,7 +84,7 @@ VALUES
 INSERT INTO acclimate_user (user_name, user_password, user_full_name)
 VALUES
     ('Miki', '$2a$04$LQekyIOhNY5dUUFzwIpt4u1sr2kTNulOvDXAWafNpm/hnqKFgVnfy', 'Miki'),
-    ('Test', '$2a$04$Z6M1pOBcgxsiNfGlLv1yA.P0gXrzrZvOKH12/x1uY5VHX6x/goz4u', 'Test');
+    ('test', '$2a$04$Z6M1pOBcgxsiNfGlLv1yA.P0gXrzrZvOKH12/x1uY5VHX6x/goz4u', 'Test');
 
 -- INSERT INTO acclimate_user_program (user_id, disaster_program_id)
 -- VALUES
